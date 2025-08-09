@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /* --- Visual Styles from Royal Spark Theme --- */
+ /* --- Visual Styles from Royal Spark Theme --- */
   :root {
     --bg-dark: #09090b;
     --card-bg: rgba(39, 39, 42, 0.5);
@@ -189,7 +189,7 @@
   }
   .main-tab-content { display: none; }
   .main-tab-content.active { display: block; }
-
+  
   /* --- Cards --- */
   .card {
     background: var(--card-bg);
@@ -719,38 +719,45 @@
 const themeToggleBtn = document.getElementById('theme-toggle');
 const sunIcon = document.getElementById('sun-icon');
 const moonIcon = document.getElementById('moon-icon');
-const userTheme = localStorage.getItem('theme');
 
-// Apply the cached theme on load
-if (userTheme === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-    sunIcon.style.display = 'none';
-    moonIcon.style.display = 'block';
-} else {
-    document.documentElement.setAttribute('data-theme', 'dark');
-    sunIcon.style.display = 'block';
-    moonIcon.style.display = 'none';
-}
-
-themeToggleBtn.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    if (currentTheme === 'dark') {
+function applyTheme(theme) {
+    if (theme === 'light') {
         document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
         sunIcon.style.display = 'none';
         moonIcon.style.display = 'block';
     } else {
         document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
         sunIcon.style.display = 'block';
         moonIcon.style.display = 'none';
     }
+}
+
+// Check for a saved theme in localStorage
+const savedTheme = localStorage.getItem('theme');
+// Check for the user's system preference
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+// Determine the initial theme
+let initialTheme = 'dark'; // Default to dark
+if (savedTheme) {
+    initialTheme = savedTheme; // Use saved theme if it exists
+} else {
+    initialTheme = prefersDark ? 'dark' : 'light'; // Otherwise, use system preference
+}
+
+// Apply the determined theme on page load
+applyTheme(initialTheme);
+
+themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('theme', newTheme);
+    applyTheme(newTheme);
 });
 
 
 // --- CUSTOM PROMPT CONFIGURATION ---
-// --- CUSTOM PROMPT CONFIGURATION ---
-// Add or edit your custom prompts for the "File Forge" workflow here.
+// Add or edit custom prompts for the "File Forge" workflow here.
 const customForgePrompts = [
     {
         name: "Standard Content",
@@ -1289,3 +1296,4 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
+
