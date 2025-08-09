@@ -4,45 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>USAF File Forge</title>
+<!-- Google Fonts for typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* --- Visual Styles from Royal Spark Theme --- */
+  :root {
+    --bg-dark: #09090b;
+    --card-bg: rgba(39, 39, 42, 0.5);
+    --border-color: rgba(161, 161, 170, 0.2);
+    --text-primary: #e4e4e7; /* zinc-200 */
+    --text-secondary: #a1a1aa; /* zinc-400 */
+    --primary-purple: #a855f7;
+    --primary-cyan: #22d3ee;
+    --accent-purple-muted: #c084fc;
+    --input-bg: rgba(24, 24, 27, 0.7);
+    --success: #22c55e;
+    --error: #ef4444;
+    --warning-yellow: #fbbf24;
+  }
+
   * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
 
-  :root {
-    /* Deep purple color scheme */
-    --primary: #7c3aed;
-    --primary-dark: #6d28d9;
-    --secondary: #a855f7;
-    --success: #10b981;
-    --error: #ef4444;
-    --bg-dark: #1a0033;
-    --bg-light: #2d1b69;
-    --card-bg: #2d1b69;
-    --text-primary: #f1f5f9;
-    --text-secondary: #c4b5fd;
-    --border: #4c1d95;
-    --accent: #e9d5ff;
-    --warning-yellow: #fbbf24;
-  }
-
   html {
-      /* This enables smooth scrolling for anchor links and JS scrolling */
       scroll-behavior: smooth;
   }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--bg-dark);
+    background-image: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.1), transparent 70%);
     color: var(--text-primary);
     line-height: 1.5;
-    min-height: 100vh;
     position: relative;
+    padding-top: 30px; /* Space for fixed banner */
   }
 
-  /* Warning Banner */
+  /* --- Fixed Warning Banner --- */
   .warning-banner {
     background: var(--warning-yellow);
     color: #000;
@@ -58,305 +61,283 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   }
 
-  /* Header */
+  /* --- Header --- */
   header {
-    background: rgba(45, 27, 105, 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px); /* Safari support */
-    border-bottom: 1px solid var(--border);
-    padding: 2rem 1rem; /* Adjusted padding for mobile */
+    background: rgba(9, 9, 11, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem;
     position: sticky;
     top: 30px; /* Account for warning banner */
     z-index: 100;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-    margin-top: 30px; /* Push down for warning banner */
+    text-align: center;
+    margin-bottom: 2rem;
   }
-
   .header-content {
     max-width: 1080px;
     margin: 0 auto;
-    padding: 0 1rem; /* Consistent padding */
-    text-align: center;
   }
-
   h1 {
-    font-size: 1.75rem; /* Reduced font size for mobile */
+    font-size: 2rem;
     font-weight: 800;
-    color: var(--primary);
     margin-bottom: 0.5rem;
+    background: linear-gradient(to right, var(--text-primary), var(--accent-purple-muted));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-
   .subtitle {
     color: var(--text-secondary);
-    font-size: 1rem; /* Reduced font size for mobile */
+    font-size: 1.1rem;
   }
 
-  /* Main layout */
+  /* --- Main Layout --- */
   main {
     max-width: 1080px;
     margin: 1rem auto;
-    padding: 0 1rem 3rem; /* Adjusted padding for mobile */
-    visibility: hidden; /* Hide main content initially */
+    padding: 0 1rem 3rem;
+    visibility: hidden;
   }
-  
   main.unlocked {
       visibility: visible;
   }
 
-  /* Main App Tabs */
+  /* --- Tabs --- */
   .main-tabs-container {
-      overflow-x: auto; /* Allows horizontal scrolling on mobile */
+      overflow-x: auto;
       white-space: nowrap;
-      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-      scrollbar-width: none; /* Hide scrollbar for Firefox */
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      text-align: center;
   }
-  .main-tabs-container::-webkit-scrollbar {
-      display: none; /* Hide scrollbar for Chrome, Safari, Opera */
-  }
+  .main-tabs-container::-webkit-scrollbar { display: none; }
   .main-tabs {
-    display: inline-flex; /* Changed from flex to inline-flex for scrolling */
+    display: inline-flex;
     justify-content: center;
-    gap: 0.5rem; /* Reduced gap */
+    gap: 0.5rem;
     margin-bottom: 2rem;
     padding: 0.25rem 0;
   }
-
   .main-tab {
-    padding: 0.75rem 1.5rem; /* Adjusted padding */
-    font-size: 1rem; /* Adjusted font size */
+    padding: 0.75rem 1.5rem;
     font-weight: 600;
     background: transparent;
     color: var(--text-secondary);
-    border: 2px solid var(--border);
-    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    flex-shrink: 0; /* Prevent tabs from shrinking */
+    flex-shrink: 0;
   }
-  
   .main-tab:hover {
-    background: var(--bg-light);
+    background: var(--input-bg);
     color: var(--text-primary);
   }
-
   .main-tab.active {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: linear-gradient(to right, var(--primary-purple), var(--primary-cyan));
     color: white;
-    border-color: var(--primary);
-    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+    border-color: transparent;
   }
-
   .main-tab-content { display: none; }
   .main-tab-content.active { display: block; }
 
-  /* Cards */
+  /* --- Cards --- */
   .card {
-    background: rgba(45, 27, 105, 0.6);
+    background: var(--card-bg);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 1.5rem; /* Reduced padding for mobile */
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
     margin-bottom: 2rem;
     transition: all 0.3s ease;
   }
-
   .card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 40px rgba(124, 58, 237, 0.2);
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 30px 4px rgba(168, 85, 247, 0.1);
   }
-
   .card h2 {
-    font-size: 1.25rem; /* Reduced font size */
+    font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem; /* Reduced gap */
+    gap: 0.75rem;
     color: var(--text-primary);
   }
-
   .step-badge {
-    width: 32px; /* Adjusted size */
-    height: 32px; /* Adjusted size */
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    border-radius:30%;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(to right, var(--primary-purple), var(--primary-cyan));
+    border-radius: 30%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem; /* Adjusted font size */
+    font-size: 1rem;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    color: white;
     flex-shrink: 0;
   }
-
   .card p {
     color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 1.5rem;
   }
 
-  /* File input */
+  /* --- File Input --- */
   input[type="file"] {
     display: block;
     padding: 1rem;
     width: 100%;
-    background: rgba(124, 58, 237, 0.1);
-    border: 2px dashed rgba(124, 58, 237, 0.5);
-    border-radius: 12px;
+    background: rgba(168, 85, 247, 0.05);
+    border: 2px dashed var(--border-color);
+    border-radius: 0.5rem;
     color: var(--text-primary);
     cursor: pointer;
     transition: all 0.3s ease;
   }
   input[type="file"]:hover {
-    background: rgba(124, 58, 237, 0.2);
-    border-color: var(--primary);
+    background: rgba(168, 85, 247, 0.1);
+    border-color: var(--primary-purple);
   }
 
-  /* Buttons */
+  /* --- Buttons --- */
   .btn {
-    padding: 0.875rem 1.5rem; /* Adjusted padding */
+    padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 12px;
+    border-radius: 0.375rem;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s;
     display: inline-flex;
     align-items: center;
-    justify-content: center; /* Center button content */
+    justify-content: center;
     gap: 0.5rem;
     text-decoration: none;
-    width: 100%; /* Make buttons full width by default on mobile */
+    width: 100%;
   }
-  
   .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: linear-gradient(to right, var(--primary-purple), var(--primary-cyan));
     color: white;
-    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
   }
   .btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(124, 58, 237, 0.4);
+    opacity: 0.9;
   }
   .btn-secondary {
-    background: rgba(196, 181, 253, 0.1);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
     color: var(--text-primary);
-    border: 1px solid var(--border);
   }
   .btn-secondary:hover:not(:disabled) {
-    background: rgba(196, 181, 253, 0.2);
+    background-color: rgba(39, 39, 42, 0.8);
   }
   .btn-restart {
     background: linear-gradient(135deg, #dc2626, #ef4444);
     color: white;
-    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);
-  }
-  .btn-restart:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(239, 68, 68, 0.4);
   }
   .btn:disabled {
-    opacity: 0.2;
+    opacity: 0.4;
     cursor: not-allowed;
   }
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
 
-  /* Sub-Tabs (AI vs Manual) */
+  /* --- Sub-Tabs --- */
   .sub-tabs {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 2rem;
-    background: rgba(26, 0, 51, 0.5);
+    background: rgba(9, 9, 11, 0.5);
     padding: 0.25rem;
-    border-radius: 12px;
+    border-radius: 0.5rem;
   }
   .sub-tab {
     flex: 1;
-    padding: 0.75rem 1rem; /* Adjusted padding */
+    padding: 0.75rem 1rem;
     background: transparent;
     border: none;
-    border-radius: 8px;
+    border-radius: 0.375rem;
     color: var(--text-secondary);
-    font-size: 0.9rem; /* Adjusted font size */
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
   }
-  .sub-tab:hover { color: var(--text-primary); }
   .sub-tab.active {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    background: var(--input-bg);
+    color: var(--text-primary);
   }
   .sub-tab-content { display: none; }
   .sub-tab-content.active { display: block; }
 
-  /* Textareas and inputs */
+  /* --- Textareas and Inputs --- */
   textarea, input[type="text"], input[type="password"], select {
     width: 100%;
-    padding: 1rem;
-    background: rgba(26, 0, 51, 0.5);
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
     color: var(--text-primary);
     font-family: inherit;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+    font-size: 1rem;
+    transition: all 0.2s ease;
     resize: vertical;
   }
-  select { padding: 0.875rem; }
   textarea:focus, input[type="text"]:focus, input[type="password"]:focus, select:focus {
     outline: none;
-    border-color: var(--primary);
-    background: rgba(26, 0, 51, 0.8);
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
   }
   .input-group { margin-bottom: 1.5rem; }
   .input-label {
     display: block;
     margin-bottom: 0.5rem;
     color: var(--text-secondary);
-    font-size: 0.9rem;
     font-weight: 500;
   }
 
-  /* Code blocks */
+  /* --- Code Blocks --- */
   pre {
-    background: rgba(26, 0, 51, 0.8);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1rem; /* Adjusted padding */
+    background: rgba(9, 9, 11, 0.8);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1rem;
     overflow-x: auto;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 0.85rem; /* Adjusted font size */
+    font-size: 0.85rem;
     line-height: 1.5;
-    color: var(--accent);
-    max-height: 300px; /* Adjusted max height */
+    color: var(--accent-purple-muted);
+    max-height: 300px;
     overflow-y: auto;
   }
   
-  /* Alerts */
+  /* --- Alerts --- */
   .alert {
     padding: 1rem;
-    border-radius: 12px;
+    border-radius: 0.5rem;
     margin: 1rem 0;
     display: flex;
     align-items: center;
     gap: 0.75rem;
     font-size: 0.9rem;
+    border: 1px solid transparent;
   }
   .alert-success {
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
     color: var(--success);
   }
   .alert-error {
     background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.3);
     color: var(--error);
   }
 
-  /* Manual fields */
+  /* --- Manual Fields --- */
   .manual-fields {
     max-height: 400px;
     overflow-y: auto;
@@ -365,8 +346,8 @@
   .manual-field {
     margin-bottom: 1.25rem;
     padding: 1rem;
-    background: rgba(26, 0, 51, 0.3);
-    border-radius: 12px;
+    background: rgba(9, 9, 11, 0.3);
+    border-radius: 0.5rem;
   }
   .manual-field label {
     display: block;
@@ -377,54 +358,39 @@
   .manual-field input {
     width: 100%;
     padding: 0.75rem;
-    background: rgba(26, 0, 51, 0.8);
-    border: 1px solid var(--border);
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     color: var(--text-primary);
     font-size: 0.95rem;
   }
-
-  /* Button group */
-  .btn-group {
-    display: flex;
-    flex-direction: column; /* Stack buttons vertically on mobile */
-    gap: 1rem;
-    margin-top: 1.5rem;
-    align-items: stretch; /* Make buttons take full width */
-  }
-
-  /* Debug panel */
+  
+  /* --- Debug & Restart --- */
   .debug-panel {
     background: rgba(0, 0, 0, 0.9);
-    border: 1px solid var(--success);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 1rem;
     margin-top: 2rem;
     font-family: monospace;
     font-size: 0.8rem;
-    color: var(--success);
+    color: var(--text-secondary);
     max-height: 150px;
     overflow-y: auto;
   }
-
-  /* Restart button container */
   .restart-container {
     text-align: center;
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--border-color);
   }
 
-  /* Custom Modals */
+  /* --- Modals --- */
   .modal-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -438,10 +404,10 @@
       visibility: visible;
   }
   .modal-content {
-      background: var(--bg-light);
+      background: #18181b; /* zinc-900 */
       padding: 2rem;
-      border-radius: 16px;
-      border: 1px solid var(--border);
+      border-radius: 1rem;
+      border: 1px solid var(--border-color);
       box-shadow: 0 10px 50px rgba(0,0,0,0.5);
       width: 90%;
       max-width: 400px;
@@ -467,61 +433,34 @@
       margin-top: 2rem;
   }
   .modal-buttons .btn {
-      width: auto; /* Override full-width for modal buttons */
+      width: auto;
       flex: 1;
   }
   .password-error-msg {
       color: var(--error);
       font-size: 0.9rem;
       margin-top: 1rem;
-      min-height: 1.2em; /* Reserve space to prevent layout shift */
-      display: none; /* Hidden by default */
+      min-height: 1.2em;
+      display: none;
   }
   .password-error-msg.visible {
       display: block;
   }
 
-
-  /* Desktop and Tablet Styles */
+  /* --- Responsive Styles --- */
   @media (min-width: 768px) {
-    header {
-        padding: 2rem 0;
-    }
-    h1 {
-        font-size: 2.25rem;
-    }
-    .subtitle {
-        font-size: 1.125rem;
-    }
-    main {
-        padding: 0 2rem 3rem;
-    }
-    .card {
-        padding: 2rem;
-    }
-    .card h2 {
-        font-size: 1.5rem;
-    }
-    .main-tabs {
-        gap: 1rem;
-    }
-    .main-tab {
-        padding: 0.75rem 2rem;
-        font-size: 1.1rem;
-    }
-    .btn-group {
-        flex-direction: row;
-        align-items: center;
-    }
-    .btn {
-        width: auto; /* Buttons are not full width on desktop */
-    }
+    h1 { font-size: 2.25rem; }
+    .subtitle { font-size: 1.125rem; }
+    .card { padding: 2rem; }
+    .main-tab { padding: 0.75rem 2rem; }
+    .btn-group { flex-direction: row; align-items: center; }
+    .btn { width: auto; }
   }
 </style>
 </head>
 <body>
 
-<!-- NEW: Password Modal -->
+<!-- Password Modal -->
 <div id="passwordModal" class="modal-overlay">
     <div class="modal-content">
         <h3>Beta Access</h3>
@@ -533,7 +472,6 @@
         <div id="passwordError" class="password-error-msg"></div>
     </div>
 </div>
-
 
 <!-- Custom Confirm Modal -->
 <div id="customConfirmModal" class="modal-overlay">
@@ -565,14 +503,12 @@
         <button class="main-tab active" onclick="switchMainTab('forge', this)">📄 File Forge</button>
         <button class="main-tab" onclick="switchMainTab('creator', this)">✨ Template Creator</button>
         <button class="main-tab" onclick="switchMainTab('placeholder', this)">🔧 Placeholder</button>
-        <!-- FIXED: Corrected the onclick function call -->
         <button class="main-tab" onclick="switchMainTab('placeholder2', this)">🔧 Placeholder 2</button>
     </div>
   </div>
 
   <!-- Main Tab: File Forge -->
   <div id="forgeTab" class="main-tab-content active">
-    <!-- Assigning IDs to cards for smooth scrolling -->
     <div id="step1Card" class="card">
       <h2><span class="step-badge">1</span>Upload Document Template</h2>
       <p>Select a Word (.docx), PowerPoint (.pptx), Excel (.xlsx), or fillable PDF (.pdf) template.</p>
@@ -607,7 +543,7 @@
           </div>
           <div class="btn-group">
               <button onclick="generateAIPrompt()" id="generateAndCopyBtn" class="btn btn-primary">🎯 Generate & Copy Prompt</button>
-              <a href="https://your-custom-url.com" class="btn btn-primary" target="_blank">🚀 Open NIPR GPT</a>
+              <a href="https://your-custom-url.com" class="btn btn-secondary" target="_blank">🚀 Open NIPR GPT</a>
            </div>
           <pre id="aiPromptOutput" style="display: none; margin-top: 1.5rem;"></pre>
           <div class="input-group" style="margin-top: 2rem;">
@@ -619,7 +555,7 @@
         
         <div id="manualTab" class="sub-tab-content">
           <div id="manualFields" class="manual-fields"></div>
-          <button onclick="fillTemplateFromManual()" class="btn btn-primary">✨ Generate Document</button>
+          <button onclick="fillTemplateFromManual()" class="btn btn-primary mt-4">✨ Generate Document</button>
         </div>
       </div>
     </div>
@@ -644,8 +580,6 @@
             <textarea id="creatorExtractedText" rows="10" placeholder="Text from your document will appear here..."></textarea>
           </div>
           
-          <!-- REMOVED: Dropdown for AI Instructions is no longer needed -->
-
           <div class="btn-group">
             <button onclick="generateTemplateAIPrompt()" id="generateTemplatePromptBtn" class="btn btn-primary" disabled>
               🎯 Generate AI Prompt
@@ -670,7 +604,6 @@
       </div>
   </div>
   <!-- Main Tab: Placeholder 2 -->
-  <!-- FIXED: Changed id to be unique -->
    <div id="placeholder2Tab" class="main-tab-content">
       <div class="card">
           <h2><span class="step-badge">?</span>Future Tool 2</h2>
@@ -732,7 +665,7 @@ const customForgePrompts = [
         "name": "After Action Report",
         "text": "Generate an After Action Report (AAR) for a recent exercise, operation, or significant event. State the overall objectives. Provide a detailed summary of what occurred. Analyze what went well (sustains) and identify the root causes. Analyze what did not go well (improves) and identify the root causes. Provide specific, actionable recommendations for improvement, including responsible parties and proposed timelines for implementation."
     }
-];
+];	
 const customTemplatePrompts = [
     { 
         name: "Strict Analysis (Default)", 
@@ -750,7 +683,7 @@ function debug(msg) {
   const output = document.getElementById('debugOutput');
   if (output) {
     const time = new Date().toLocaleTimeString();
-    output.innerHTML += `<div class="debug-line">[${time}] ${msg}</div>`;
+    output.innerHTML += `<div>[${time}] ${msg}</div>`;
     output.scrollTop = output.scrollHeight;
   }
 }
@@ -781,10 +714,10 @@ window.onload = function() {
 
 function populatePromptDropdowns() {
     const forgeSelector = document.getElementById('forgePromptSelector');
+    forgeSelector.innerHTML = '';
     customForgePrompts.forEach((prompt, index) => {
         forgeSelector.add(new Option(prompt.name, index));
     });
-    // REMOVED: No longer need to populate the creator prompt dropdown
     debug('Custom prompt dropdowns populated.');
 }
 
@@ -808,16 +741,14 @@ function setupPasswordModal() {
     const passwordInput = document.getElementById('passwordInput');
     const submitBtn = document.getElementById('passwordSubmitBtn');
     
-    modal.classList.add('visible'); // Show password modal on load
-    passwordInput.focus(); // FIXED: Set focus to the password input
+    modal.classList.add('visible');
+    passwordInput.focus();
 
     const checkPassword = () => {
         const errorMsg = document.getElementById('passwordError');
         if (passwordInput.value === 'theonetool') {
             modal.classList.remove('visible');
             document.querySelector('main').classList.add('unlocked');
-            // Initialize the rest of the app
-            debug('Password correct. Initializing app.');
             populatePromptDropdowns();
         } else {
             errorMsg.textContent = 'Incorrect password. Please try again.';
@@ -846,7 +777,6 @@ function switchMainTab(tabName, button) {
     document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
     button.classList.add('active');
     document.querySelectorAll('.main-tab-content').forEach(c => c.classList.remove('active'));
-    // This line was causing the error because it couldn't find an element with a duplicate ID
     const tabContent = document.getElementById(tabName + 'Tab');
     if (tabContent) {
         tabContent.classList.add('active');
@@ -1025,9 +955,10 @@ async function generateAIPrompt() {
   const selectedPromptIndex = document.getElementById('forgePromptSelector').value;
   const customText = customForgePrompts[selectedPromptIndex].text;
   const context = document.getElementById('aiContext').value;
-  const prompt = `${customText}\n\n${context}\n\nPlaceholders to fill:\n${forgeState.placeholders.map(p => `- ${p}`).join('\n')}\n\nReturn as JSON:\n{\n${forgeState.placeholders.map(p => `  "${p}": "your content here"`).join(',\n')}\n}`;
+  const prompt = `You will conduct market research, align goals, and format appropriately where necessary, while outputting a valid JSON object ONLY. No additional text or markdown. ${customText}\n\n${context} You must ONLY return a valid JSON object, replacing the placeholders with the relevant text you have output. \n\nPlaceholders to fill:\n${forgeState.placeholders.map(p => `- ${p}`).join('\n')}\n\nReturn as JSON:\n{\n${forgeState.placeholders.map(p => `  "${p}": "your content here"`).join(',\n')}\n}`;
   const promptOutput = document.getElementById('aiPromptOutput');
   promptOutput.textContent = prompt;
+  // promptOutput.style.display = 'block'; // Commented out to hide prompt after copying
   try {
     await navigator.clipboard.writeText(prompt);
     const btn = document.getElementById('generateAndCopyBtn');
@@ -1170,12 +1101,11 @@ async function extractAllText() {
 }
 async function generateTemplateAIPrompt() {
     if (!creatorState.fullText) { alert('Please upload a document and extract its text first.'); return; }
-    // UPDATED: Directly use the first (and only) prompt
     const customText = customTemplatePrompts[0].text;
     const prompt = `${customText}\n\nDocument Text to Analyze:\n---\n${creatorState.fullText}\n---`;
     const promptOutput = document.getElementById('creatorAIPromptOutput');
     promptOutput.textContent = prompt;
-    promptOutput.style.display = 'block';
+    // promptOutput.style.display = 'block'; // Commented out to hide prompt after copying
     try {
         await navigator.clipboard.writeText(prompt);
         const btn = document.getElementById('generateTemplatePromptBtn');
@@ -1240,4 +1170,3 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
-
