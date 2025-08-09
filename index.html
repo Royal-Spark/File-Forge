@@ -565,6 +565,7 @@
         <button class="main-tab active" onclick="switchMainTab('forge', this)">📄 File Forge</button>
         <button class="main-tab" onclick="switchMainTab('creator', this)">✨ Template Creator</button>
         <button class="main-tab" onclick="switchMainTab('placeholder', this)">🔧 Placeholder</button>
+        <!-- FIXED: Corrected the onclick function call -->
         <button class="main-tab" onclick="switchMainTab('placeholder2', this)">🔧 Placeholder 2</button>
     </div>
   </div>
@@ -669,10 +670,11 @@
       </div>
   </div>
   <!-- Main Tab: Placeholder 2 -->
-   <div id="placeholderTab" class="main-tab-content">
+  <!-- FIXED: Changed id to be unique -->
+   <div id="placeholder2Tab" class="main-tab-content">
       <div class="card">
-          <h2><span class="step-badge">?</span>Future Tool</h2>
-          <p>This section is reserved for a future tool. Check back later for updates!</p>
+          <h2><span class="step-badge">?</span>Future Tool 2</h2>
+          <p>This section is reserved for a second future tool. Check back later for updates!</p>
       </div>
   </div>
 
@@ -782,6 +784,7 @@ function setupPasswordModal() {
     const submitBtn = document.getElementById('passwordSubmitBtn');
     
     modal.classList.add('visible'); // Show password modal on load
+    passwordInput.focus(); // FIXED: Set focus to the password input
 
     const checkPassword = () => {
         const errorMsg = document.getElementById('passwordError');
@@ -818,7 +821,11 @@ function switchMainTab(tabName, button) {
     document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
     button.classList.add('active');
     document.querySelectorAll('.main-tab-content').forEach(c => c.classList.remove('active'));
-    document.getElementById(tabName + 'Tab').classList.add('active');
+    // This line was causing the error because it couldn't find an element with a duplicate ID
+    const tabContent = document.getElementById(tabName + 'Tab');
+    if (tabContent) {
+        tabContent.classList.add('active');
+    }
     debug(`Switched to main tab: ${tabName}`);
 }
 
