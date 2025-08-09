@@ -698,15 +698,40 @@
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script>
 // --- CUSTOM PROMPT CONFIGURATION ---
+// Add or edit your custom prompts for the "File Forge" workflow here.
 const customForgePrompts = [
-    { name: "Standard Content", text: "Please fill these placeholders with appropriate, professional content." },
-    { name: "100 ARW Project One-Pager", text: "Generate content for a project one-pager aligned with the 100th Air Refueling Wing mission..." },
-    { name: "352 SOW Project One-Pager", text: "Generate content for a project one-pager aligned with the 352nd Special Operations Wing mission..." },
-    { name: "48 FW Project One-Pager", text: "Generate content for a project one-pager aligned with the 48th Fighter Wing mission..." },
-    { name: "USAF Decoration Narrative", text: "Write a formal narrative for a United States Air Force decoration..." },
-    { name: "USAF Memorandum for Record (MFR)", text: "Draft a concise, factual Memorandum for Record (MFR)..." },
-    { name: "USAF LOC/LOR/LOA", text: "Generate the text for a formal Letter of Counseling, Admonishment, or Reprimand..." },
-    { name: "After Action Report", text: "Generate an After Action Report (AAR) for a recent exercise, operation, or significant event..." }
+    {
+        name: "Standard Content",
+        text: "Please fill these placeholders with appropriate, professional content."
+    },
+    {
+        "name": "100 ARW Project One-Pager",
+        "text": "Generate content for a project one-pager aligned with the 100th Air Refueling Wing mission. Detail the project's objective and how it enhances air refueling, combat support, or European theater operations. Specify key performance indicators, required resources (personnel, equipment, funding), a projected timeline with major milestones, and anticipated impact on readiness and mission effectiveness. Identify key stakeholders and potential risks."
+    },
+    {
+        "name": "352 SOW Project One-Pager",
+        "text": "Generate content for a project one-pager aligned with the 352nd Special Operations Wing mission. Describe how the project supports special operations airpower, including infiltration, exfiltration, and precision strike capabilities. Outline the project scope, strategic objectives, required specialized assets, and integration with joint/partner forces. Detail the timeline, risk assessment, and how success will be measured in the context of special warfare."
+    },
+    {
+        "name": "48 FW Project One-Pager",
+        "text": "Generate content for a project one-pager aligned with the 48th Fighter Wing mission. Explain how the project improves combat airpower, readiness, or support operations for the Liberty Wing. Define the project's goals, connection to F-15/F-35 operations, expected outcomes for sortie generation or lethality, required budget, personnel, and a clear timeline. Summarize the project's contribution to NATO objectives and air superiority."
+    },
+    {
+        "name": "USAF Decoration Narrative",
+        "text": "Write a formal narrative for a United States Air Force decoration. Detail the individual's specific, noteworthy achievement or service. Clearly describe the action, the outcome, and the significant impact on the unit's mission, personnel, or resources. Use strong, action-oriented language appropriate for a military citation. Focus on quantifiable results where possible."
+    },
+    {
+        "name": "USAF Memorandum for Record (MFR)",
+        "text": "Draft a concise, factual Memorandum for Record (MFR). State the purpose of the memorandum clearly in the opening. Document the key details of an event, decision, or conversation, including the date, time, location, and personnel involved. Present the information chronologically and objectively, without personal opinion or speculation. Conclude with any resulting actions or decisions made."
+    },
+    {
+        "name": "USAF LOC/LOR/LOA",
+        "text": "Generate the text for a formal Letter of Counseling, Admonishment, or Reprimand. Clearly state the specific infraction or unacceptable behavior and cite the relevant AFI, UCMJ article, or standard that was violated. Describe the negative impact of the action. Detail the required corrective actions the member must take and by what date. Include a statement that further deviation will result in more severe action."
+    },
+    {
+        "name": "After Action Report",
+        "text": "Generate an After Action Report (AAR) for a recent exercise, operation, or significant event. State the overall objectives. Provide a detailed summary of what occurred. Analyze what went well (sustains) and identify the root causes. Analyze what did not go well (improves) and identify the root causes. Provide specific, actionable recommendations for improvement, including responsible parties and proposed timelines for implementation."
+    }
 ];
 const customTemplatePrompts = [
     { 
@@ -1215,3 +1240,4 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
+
