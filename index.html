@@ -96,8 +96,13 @@
     max-width: 1080px;
     margin: 1rem auto;
     padding: 0 1rem 3rem; /* Adjusted padding for mobile */
+    visibility: hidden; /* Hide main content initially */
   }
   
+  main.unlocked {
+      visibility: visible;
+  }
+
   /* Main App Tabs */
   .main-tabs-container {
       overflow-x: auto; /* Allows horizontal scrolling on mobile */
@@ -287,7 +292,7 @@
   .sub-tab-content.active { display: block; }
 
   /* Textareas and inputs */
-  textarea, input[type="text"], select {
+  textarea, input[type="text"], input[type="password"], select {
     width: 100%;
     padding: 1rem;
     background: rgba(26, 0, 51, 0.5);
@@ -300,7 +305,7 @@
     resize: vertical;
   }
   select { padding: 0.875rem; }
-  textarea:focus, input[type="text"]:focus, select:focus {
+  textarea:focus, input[type="text"]:focus, input[type="password"]:focus, select:focus {
     outline: none;
     border-color: var(--primary);
     background: rgba(26, 0, 51, 0.8);
@@ -410,7 +415,7 @@
     border-top: 1px solid var(--border);
   }
 
-  /* NEW: Custom Modal for Confirm Dialog */
+  /* Custom Modals */
   .modal-overlay {
       position: fixed;
       top: 0;
@@ -452,18 +457,30 @@
       color: var(--text-primary);
   }
   .modal-content p {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       color: var(--text-secondary);
   }
   .modal-buttons {
       display: flex;
       gap: 1rem;
       justify-content: center;
+      margin-top: 2rem;
   }
   .modal-buttons .btn {
       width: auto; /* Override full-width for modal buttons */
       flex: 1;
   }
+  .password-error-msg {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      min-height: 1.2em; /* Reserve space to prevent layout shift */
+      display: none; /* Hidden by default */
+  }
+  .password-error-msg.visible {
+      display: block;
+  }
+
 
   /* Desktop and Tablet Styles */
   @media (min-width: 768px) {
@@ -504,7 +521,21 @@
 </head>
 <body>
 
-<!-- NEW: Custom Modal HTML Structure -->
+<!-- NEW: Password Modal -->
+<div id="passwordModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>Beta Access</h3>
+        <p>This tool is in beta testing. Please enter the password to continue.</p>
+        <div class="input-group">
+            <input type="password" id="passwordInput" placeholder="Enter password...">
+        </div>
+        <button id="passwordSubmitBtn" class="btn btn-primary">Enter</button>
+        <div id="passwordError" class="password-error-msg"></div>
+    </div>
+</div>
+
+
+<!-- Custom Confirm Modal -->
 <div id="customConfirmModal" class="modal-overlay">
     <div class="modal-content">
         <h3 id="modalTitle">Are you sure?</h3>
@@ -533,7 +564,7 @@
     <div class="main-tabs">
         <button class="main-tab active" onclick="switchMainTab('forge', this)">📄 File Forge</button>
         <button class="main-tab" onclick="switchMainTab('creator', this)">✨ Template Creator</button>
-       <!-- <button class="main-tab" onclick="switchMainTab('placeholder', this)">🔧 Placeholder</button> -->
+        <button class="main-tab" onclick="switchMainTab('placeholder', this)">🔧 Placeholder</button>
     </div>
   </div>
 
@@ -689,11 +720,9 @@ function debug(msg) {
   }
 }
 
-// NEW: Smooth scrolling function
 function scrollToElement(elementId) {
     const element = document.getElementById(elementId);
     if (element) {
-        // Using a timeout allows the DOM to update before we scroll
         setTimeout(() => {
             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 100);
@@ -710,10 +739,9 @@ function xmlEncode(text) {
 
 // --- INITIALIZATION & UI CONTROL ---
 window.onload = function() {
-  debug('Page loaded successfully');
-  debug('pdf-lib available: ' + (typeof PDFLib !== 'undefined'));
-  populatePromptDropdowns();
-  setupModal(); // NEW: Initialize the custom modal listeners
+  debug('Page loaded. Awaiting password.');
+  setupModal();
+  setupPasswordModal();
 }
 
 function populatePromptDropdowns() {
@@ -728,22 +756,49 @@ function populatePromptDropdowns() {
     debug('Custom prompt dropdowns populated.');
 }
 
-// NEW: Custom Confirmation Modal Logic
+// --- MODAL LOGIC ---
 let confirmCallback = null;
 function setupModal() {
     const modal = document.getElementById('customConfirmModal');
     const cancelBtn = document.getElementById('modalCancelBtn');
     const confirmBtn = document.getElementById('modalConfirmBtn');
     
-    cancelBtn.addEventListener('click', () => {
-        modal.classList.remove('visible');
-    });
+    cancelBtn.addEventListener('click', () => modal.classList.remove('visible'));
     
     confirmBtn.addEventListener('click', () => {
-        if (typeof confirmCallback === 'function') {
-            confirmCallback();
-        }
+        if (typeof confirmCallback === 'function') confirmCallback();
         modal.classList.remove('visible');
+    });
+}
+
+function setupPasswordModal() {
+    const modal = document.getElementById('passwordModal');
+    const passwordInput = document.getElementById('passwordInput');
+    const submitBtn = document.getElementById('passwordSubmitBtn');
+    
+    modal.classList.add('visible'); // Show password modal on load
+
+    const checkPassword = () => {
+        const errorMsg = document.getElementById('passwordError');
+        if (passwordInput.value === 'password') {
+            modal.classList.remove('visible');
+            document.querySelector('main').classList.add('unlocked');
+            // Initialize the rest of the app
+            debug('Password correct. Initializing app.');
+            populatePromptDropdowns();
+        } else {
+            errorMsg.textContent = 'Incorrect password. Please try again.';
+            errorMsg.classList.add('visible');
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    };
+    
+    submitBtn.addEventListener('click', checkPassword);
+    passwordInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            checkPassword();
+        }
     });
 }
 
@@ -770,13 +825,8 @@ function switchSubTab(tabName, button) {
   debug(`Switched to sub-tab: ${tabName}`);
 }
 
-// UPDATED: Use the new custom confirmation
 function handleRestartClick() {
-    showConfirm(
-        'Restart Tool?',
-        'This will clear all current data and reset the application.',
-        restartTool // This is the callback function
-    );
+    showConfirm('Restart Tool?', 'This will clear all current data and reset the application.', restartTool);
 }
 
 function restartTool() {
@@ -788,7 +838,7 @@ function restartTool() {
     resetCreatorUI();
     document.getElementById('debugOutput').innerHTML = '';
     debug('Tool restarted');
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function resetForgeUI() {
@@ -847,14 +897,13 @@ function handleFileChange(event, mode) {
         forgeState = { ...forgeState, fileBuffer, fileType, fileName: file.name };
         document.getElementById('extractBtn').disabled = false;
         debug(`Forge file loaded: ${file.name}`);
-        scrollToElement('step2Card'); // NEW: Scroll to the next step
+        scrollToElement('step2Card');
         setTimeout(() => extractPlaceholders(), 100);
     } else if (mode === 'creator') {
         resetCreatorUI();
         infoEl.innerHTML = `<div class="alert alert-success">✅ ${file.name} loaded</div>`;
         creatorState = { ...creatorState, fileBuffer, fileType, fileName: file.name };
         debug(`Creator file loaded: ${file.name}`);
-        // Similar logic for creator if needed
         setTimeout(() => extractAllText(), 100);
     }
   };
@@ -914,7 +963,7 @@ async function extractPlaceholders() {
       output.innerHTML = `<div class="alert alert-success">✅ Found ${forgeState.placeholders.length} placeholders/fields.</div>`;
       document.getElementById('tabsContainer').style.display = 'block';
       setupManualFields();
-      scrollToElement('tabsContainer'); // NEW: Scroll to the config tabs
+      scrollToElement('tabsContainer');
     }
   } catch (error) {
     debug('Placeholder extraction error: ' + error.message);
@@ -1036,12 +1085,7 @@ async function fillTemplateFromManual() {
   await fillTemplate(data);
 }
 
-// --- TEMPLATE CREATOR WORKFLOW (abbreviated for brevity, no changes made here) ---
-async function extractAllText() { /* ... no changes ... */ }
-async function generateTemplateAIPrompt() { /* ... no changes ... */ }
-async function createTemplateFromAI() { /* ... no changes ... */ }
-
-// Dummy functions to avoid errors
+// --- TEMPLATE CREATOR WORKFLOW ---
 async function extractAllText() {
     if (!creatorState.fileBuffer) return;
     debug('Extracting all text for Creator...');
@@ -1159,4 +1203,3 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
-
