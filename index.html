@@ -565,6 +565,7 @@
         <button class="main-tab active" onclick="switchMainTab('forge', this)">📄 File Forge</button>
         <button class="main-tab" onclick="switchMainTab('creator', this)">✨ Template Creator</button>
         <button class="main-tab" onclick="switchMainTab('placeholder', this)">🔧 Placeholder</button>
+        <button class="main-tab" onclick="switchMainTab('placeholder2', this)">🔧 Placeholder 2</button>
     </div>
   </div>
 
@@ -641,10 +642,9 @@
             <label class="input-label">Extracted Document Text</label>
             <textarea id="creatorExtractedText" rows="10" placeholder="Text from your document will appear here..."></textarea>
           </div>
-          <div class="input-group">
-            <label class="input-label">AI Instructions</label>
-            <select id="creatorPromptSelector"></select>
-          </div>
+          
+          <!-- REMOVED: Dropdown for AI Instructions is no longer needed -->
+
           <div class="btn-group">
             <button onclick="generateTemplateAIPrompt()" id="generateTemplatePromptBtn" class="btn btn-primary" disabled>
               🎯 Generate AI Prompt
@@ -663,6 +663,13 @@
 
   <!-- Main Tab: Placeholder -->
   <div id="placeholderTab" class="main-tab-content">
+      <div class="card">
+          <h2><span class="step-badge">?</span>Future Tool</h2>
+          <p>This section is reserved for a future tool. Check back later for updates!</p>
+      </div>
+  </div>
+  <!-- Main Tab: Placeholder 2 -->
+   <div id="placeholderTab" class="main-tab-content">
       <div class="card">
           <h2><span class="step-badge">?</span>Future Tool</h2>
           <p>This section is reserved for a future tool. Check back later for updates!</p>
@@ -700,9 +707,10 @@ const customForgePrompts = [
     { name: "After Action Report", text: "Generate an After Action Report (AAR) for a recent exercise, operation, or significant event..." }
 ];
 const customTemplatePrompts = [
-    { name: "Standard Analysis", text: "Analyze the following document text to identify variable information..." },
-    { name: "Legal Document Analysis", text: "Analyze the following legal document text..." },
-    { name: "Technical Report Analysis", text: "Analyze this technical report..." }
+    { 
+        name: "Strict Analysis (Default)", 
+        text: "Analyze the following document text. Your task is to identify all pieces of information that are variable and should be converted into placeholders. For each variable piece of information, you must: 1. Find the exact 'originalText' from the document. 2. Create a concise, descriptive, camelCase 'placeholderName' for it. Your final output must be ONLY a single, valid JSON array of objects, where each object contains an 'originalText' key and a 'placeholderName' key. Do not include any explanations, comments, or any text outside of the JSON array structure. Your entire response must be parsable as JSON." 
+    }
 ];
 
 // --- STATE MANAGEMENT ---
@@ -749,10 +757,7 @@ function populatePromptDropdowns() {
     customForgePrompts.forEach((prompt, index) => {
         forgeSelector.add(new Option(prompt.name, index));
     });
-    const creatorSelector = document.getElementById('creatorPromptSelector');
-    customTemplatePrompts.forEach((prompt, index) => {
-        creatorSelector.add(new Option(prompt.name, index));
-    });
+    // REMOVED: No longer need to populate the creator prompt dropdown
     debug('Custom prompt dropdowns populated.');
 }
 
@@ -780,7 +785,7 @@ function setupPasswordModal() {
 
     const checkPassword = () => {
         const errorMsg = document.getElementById('passwordError');
-        if (passwordInput.value === 'onetooltorulethemall') {
+        if (passwordInput.value === 'theonetool') {
             modal.classList.remove('visible');
             document.querySelector('main').classList.add('unlocked');
             // Initialize the rest of the app
@@ -1133,9 +1138,9 @@ async function extractAllText() {
 }
 async function generateTemplateAIPrompt() {
     if (!creatorState.fullText) { alert('Please upload a document and extract its text first.'); return; }
-    const selectedPromptIndex = document.getElementById('creatorPromptSelector').value;
-    const customText = customTemplatePrompts[selectedPromptIndex].text;
-    const prompt = `${customText}\n\nFor each piece of variable information... \n\nDocument Text to Analyze:\n---\n${creatorState.fullText}\n---`;
+    // UPDATED: Directly use the first (and only) prompt
+    const customText = customTemplatePrompts[0].text;
+    const prompt = `${customText}\n\nDocument Text to Analyze:\n---\n${creatorState.fullText}\n---`;
     const promptOutput = document.getElementById('creatorAIPromptOutput');
     promptOutput.textContent = prompt;
     promptOutput.style.display = 'block';
@@ -1203,4 +1208,3 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
-
