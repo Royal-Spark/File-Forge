@@ -67,16 +67,22 @@
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border-color);
-    padding: 1rem;
+    padding: 0 1rem;
     position: sticky;
     top: 30px; /* Account for warning banner */
     z-index: 100;
-    text-align: center;
-    margin-bottom: 2rem;
   }
   .header-content {
     max-width: 1080px;
     margin: 0 auto;
+    display: flex;
+    align-items: center;
+    height: 4rem;
+  }
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
   h1 {
     font-size: 2rem;
@@ -492,10 +498,17 @@
 
 <header>
   <div class="header-content">
-    <h1>🛠️ USAF File Forge</h1>
-    <div class="subtitle">Rapid Document Automation & Template Creation</div>
+    <div class="logo-container">
+        <img src="https://dwtymuzolmglgyejxuve.supabase.co/storage/v1/object/public/podcasts//Royal%20Spark%20D%20Logo%20-%20Mekvold%20V3.png" alt="Royal Spark Logo" style="height: 2.5rem; width: auto;">
+        <span style="font-size: 1.25rem; font-weight: 700; background: linear-gradient(to right, var(--primary-purple), var(--primary-cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-left: 0.5rem;">Royal Spark</span>
+    </div>
   </div>
 </header>
+
+<div style="text-align: center; margin-bottom: 2rem;">
+    <h1>🛠️ USAF File Forge</h1>
+    <div class="subtitle">Rapid Document Automation & Template Creation</div>
+</div>
 
 <main>
   <div class="main-tabs-container">
@@ -631,41 +644,16 @@
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script>
 // --- CUSTOM PROMPT CONFIGURATION ---
-// Add or edit your custom prompts for the "File Forge" workflow here.
 const customForgePrompts = [
-    {
-        name: "Standard Content",
-        text: "Please fill these placeholders with appropriate, professional content."
-    },
-    {
-        "name": "100 ARW Project One-Pager",
-        "text": "Generate content for a project one-pager aligned with the 100th Air Refueling Wing mission. Detail the project's objective and how it enhances air refueling, combat support, or European theater operations. Specify key performance indicators, required resources (personnel, equipment, funding), a projected timeline with major milestones, and anticipated impact on readiness and mission effectiveness. Identify key stakeholders and potential risks."
-    },
-    {
-        "name": "352 SOW Project One-Pager",
-        "text": "Generate content for a project one-pager aligned with the 352nd Special Operations Wing mission. Describe how the project supports special operations airpower, including infiltration, exfiltration, and precision strike capabilities. Outline the project scope, strategic objectives, required specialized assets, and integration with joint/partner forces. Detail the timeline, risk assessment, and how success will be measured in the context of special warfare."
-    },
-    {
-        "name": "48 FW Project One-Pager",
-        "text": "Generate content for a project one-pager aligned with the 48th Fighter Wing mission. Explain how the project improves combat airpower, readiness, or support operations for the Liberty Wing. Define the project's goals, connection to F-15/F-35 operations, expected outcomes for sortie generation or lethality, required budget, personnel, and a clear timeline. Summarize the project's contribution to NATO objectives and air superiority."
-    },
-    {
-        "name": "USAF Decoration Narrative",
-        "text": "Write a formal narrative for a United States Air Force decoration. Detail the individual's specific, noteworthy achievement or service. Clearly describe the action, the outcome, and the significant impact on the unit's mission, personnel, or resources. Use strong, action-oriented language appropriate for a military citation. Focus on quantifiable results where possible."
-    },
-    {
-        "name": "USAF Memorandum for Record (MFR)",
-        "text": "Draft a concise, factual Memorandum for Record (MFR). State the purpose of the memorandum clearly in the opening. Document the key details of an event, decision, or conversation, including the date, time, location, and personnel involved. Present the information chronologically and objectively, without personal opinion or speculation. Conclude with any resulting actions or decisions made."
-    },
-    {
-        "name": "USAF LOC/LOR/LOA",
-        "text": "Generate the text for a formal Letter of Counseling, Admonishment, or Reprimand. Clearly state the specific infraction or unacceptable behavior and cite the relevant AFI, UCMJ article, or standard that was violated. Describe the negative impact of the action. Detail the required corrective actions the member must take and by what date. Include a statement that further deviation will result in more severe action."
-    },
-    {
-        "name": "After Action Report",
-        "text": "Generate an After Action Report (AAR) for a recent exercise, operation, or significant event. State the overall objectives. Provide a detailed summary of what occurred. Analyze what went well (sustains) and identify the root causes. Analyze what did not go well (improves) and identify the root causes. Provide specific, actionable recommendations for improvement, including responsible parties and proposed timelines for implementation."
-    }
-];	
+    { name: "Standard Content", text: "Please fill these placeholders with appropriate, professional content." },
+    { name: "100 ARW Project One-Pager", text: "Generate content for a project one-pager aligned with the 100th Air Refueling Wing mission..." },
+    { name: "352 SOW Project One-Pager", text: "Generate content for a project one-pager aligned with the 352nd Special Operations Wing mission..." },
+    { name: "48 FW Project One-Pager", text: "Generate content for a project one-pager aligned with the 48th Fighter Wing mission..." },
+    { name: "USAF Decoration Narrative", text: "Write a formal narrative for a United States Air Force decoration..." },
+    { name: "USAF Memorandum for Record (MFR)", text: "Draft a concise, factual Memorandum for Record (MFR)..." },
+    { name: "USAF LOC/LOR/LOA", text: "Generate the text for a formal Letter of Counseling, Admonishment, or Reprimand..." },
+    { name: "After Action Report", text: "Generate an After Action Report (AAR) for a recent exercise, operation, or significant event..." }
+];
 const customTemplatePrompts = [
     { 
         name: "Strict Analysis (Default)", 
@@ -955,7 +943,7 @@ async function generateAIPrompt() {
   const selectedPromptIndex = document.getElementById('forgePromptSelector').value;
   const customText = customForgePrompts[selectedPromptIndex].text;
   const context = document.getElementById('aiContext').value;
-  const prompt = `You will conduct market research, align goals, and format appropriately where necessary, while outputting a valid JSON object ONLY. No additional text or markdown. ${customText}\n\n${context} You must ONLY return a valid JSON object, replacing the placeholders with the relevant text you have output. \n\nPlaceholders to fill:\n${forgeState.placeholders.map(p => `- ${p}`).join('\n')}\n\nReturn as JSON:\n{\n${forgeState.placeholders.map(p => `  "${p}": "your content here"`).join(',\n')}\n}`;
+  const prompt = `${customText}\n\n${context}\n\nPlaceholders to fill:\n${forgeState.placeholders.map(p => `- ${p}`).join('\n')}\n\nReturn as JSON:\n{\n${forgeState.placeholders.map(p => `  "${p}": "your content here"`).join(',\n')}\n}`;
   const promptOutput = document.getElementById('aiPromptOutput');
   promptOutput.textContent = prompt;
   // promptOutput.style.display = 'block'; // Commented out to hide prompt after copying
