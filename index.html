@@ -25,6 +25,15 @@
     --warning-yellow: #fbbf24;
   }
 
+  html[data-theme='light'] {
+    --bg-dark: #f4f4f5; /* zinc-100 */
+    --card-bg: rgba(255, 255, 255, 0.8);
+    --border-color: #d4d4d8; /* zinc-300 */
+    --text-primary: #18181b; /* zinc-900 */
+    --text-secondary: #52525b; /* zinc-600 */
+    --input-bg: #e4e4e7; /* zinc-200 */
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -43,6 +52,7 @@
     line-height: 1.5;
     position: relative;
     padding-top: 30px; /* Space for fixed banner */
+    transition: background-color 0.3s, color 0.3s;
   }
 
   /* --- Fixed Warning Banner --- */
@@ -72,11 +82,16 @@
     top: 30px; /* Account for warning banner */
     z-index: 100;
   }
+   html[data-theme='light'] header {
+     background: rgba(255, 255, 255, 0.8);
+   }
+
   .header-content {
     max-width: 1080px;
     margin: 0 auto;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     height: 4rem;
   }
   .logo-container {
@@ -93,9 +108,36 @@
     background-clip: text;
     color: transparent;
   }
+   html[data-theme='light'] h1 {
+     background: none;
+     color: var(--text-primary);
+   }
   .subtitle {
     color: var(--text-secondary);
     font-size: 1.1rem;
+  }
+
+  /* Theme Toggle Button */
+  .theme-toggle-btn {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .theme-toggle-btn:hover {
+    border-color: var(--primary-purple);
+    color: var(--text-primary);
+  }
+  .theme-toggle-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   /* --- Main Layout --- */
@@ -161,6 +203,9 @@
   .card:hover {
     border-color: rgba(168, 85, 247, 0.5);
     box-shadow: 0 0 30px 4px rgba(168, 85, 247, 0.1);
+  }
+  html[data-theme='light'] .card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   }
   .card h2 {
     font-size: 1.5rem;
@@ -238,6 +283,9 @@
   .btn-secondary:hover:not(:disabled) {
     background-color: rgba(39, 39, 42, 0.8);
   }
+   html[data-theme='light'] .btn-secondary:hover:not(:disabled) {
+     background-color: #e4e4e7;
+   }
   .btn-restart {
     background: linear-gradient(135deg, #dc2626, #ef4444);
     color: white;
@@ -262,6 +310,9 @@
     padding: 0.25rem;
     border-radius: 0.5rem;
   }
+   html[data-theme='light'] .sub-tabs {
+     background: #e4e4e7;
+   }
   .sub-tab {
     flex: 1;
     padding: 0.75rem 1rem;
@@ -276,6 +327,9 @@
   .sub-tab.active {
     background: var(--input-bg);
     color: var(--text-primary);
+  }
+  html[data-theme='light'] .sub-tab.active {
+    background: white;
   }
   .sub-tab-content { display: none; }
   .sub-tab-content.active { display: block; }
@@ -337,10 +391,16 @@
     border-color: rgba(34, 197, 94, 0.3);
     color: var(--success);
   }
+   html[data-theme='light'] .alert-success {
+     color: #15803d; /* green-700 */
+   }
   .alert-error {
     background: rgba(239, 68, 68, 0.1);
     border-color: rgba(239, 68, 68, 0.3);
     color: var(--error);
+  }
+  html[data-theme='light'] .alert-error {
+    color: #b91c1c; /* red-700 */
   }
 
   /* --- Manual Fields --- */
@@ -354,6 +414,9 @@
     padding: 1rem;
     background: rgba(9, 9, 11, 0.3);
     border-radius: 0.5rem;
+  }
+  html[data-theme='light'] .manual-field {
+    background: #f4f4f5; /* zinc-100 */
   }
   .manual-field label {
     display: block;
@@ -421,6 +484,9 @@
       transform: scale(0.9);
       transition: transform 0.3s ease;
   }
+   html[data-theme='light'] .modal-content {
+     background: white;
+   }
   .modal-overlay.visible .modal-content {
       transform: scale(1);
   }
@@ -498,12 +564,16 @@
 
 <header>
   <div class="header-content">
-   <a href="https://royal-spark.github.io/Landing-Page/#tools" style="text-decoration: none;">
+    <a href="YOUR_LANDING_PAGE_URL_HERE" style="text-decoration: none;">
         <div class="logo-container">
             <img src="https://dwtymuzolmglgyejxuve.supabase.co/storage/v1/object/public/podcasts//Royal%20Spark%20D%20Logo%20-%20Mekvold%20V3.png" alt="Royal Spark Logo" style="height: 2.5rem; width: auto;">
             <span style="font-size: 1.25rem; font-weight: 700; background: linear-gradient(to right, var(--primary-purple), var(--primary-cyan)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-left: 0.5rem;">Royal Spark</span>
         </div>
     </a>
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.106a.75.75 0 0 1 0 1.06l-1.591 1.59a.75.75 0 1 1-1.06-1.06l1.59-1.59a.75.75 0 0 1 1.06 0ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5h2.25a.75.75 0 0 1 .75.75ZM17.894 17.894a.75.75 0 0 1-1.06 0l-1.59-1.591a.75.75 0 1 1 1.06-1.06l1.59 1.59a.75.75 0 0 1 0 1.061ZM12 18.75a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0v-2.25a.75.75 0 0 1 .75-.75ZM5.106 17.894a.75.75 0 0 1 0-1.06l1.59-1.591a.75.75 0 1 1 1.06 1.06l-1.59 1.59a.75.75 0 0 1-1.06 0ZM4.5 12a.75.75 0 0 1-.75.75H1.5a.75.75 0 0 1 0-1.5h2.25a.75.75 0 0 1 .75.75ZM6.106 5.106a.75.75 0 0 1 1.06 0l1.59 1.591a.75.75 0 0 1-1.06 1.06l-1.59-1.59a.75.75 0 0 1 0-1.061Z" /></svg>
+        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display: none;"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.981A10.503 10.503 0 0 1 18 19.5a10.5 10.5 0 0 1-10.5-10.5A10.503 10.503 0 0 1 9.528 1.718Z" clip-rule="evenodd" /></svg>
+    </button>
   </div>
 </header>
 
@@ -645,6 +715,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script>
+// --- THEME SWITCHER LOGIC ---
+const themeToggleBtn = document.getElementById('theme-toggle');
+const sunIcon = document.getElementById('sun-icon');
+const moonIcon = document.getElementById('moon-icon');
+const userTheme = localStorage.getItem('theme');
+
+// Apply the cached theme on load
+if (userTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    sunIcon.style.display = 'none';
+    moonIcon.style.display = 'block';
+} else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    sunIcon.style.display = 'block';
+    moonIcon.style.display = 'none';
+}
+
+themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    if (currentTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+    }
+});
+
+
+// --- CUSTOM PROMPT CONFIGURATION ---
 // --- CUSTOM PROMPT CONFIGURATION ---
 // Add or edit your custom prompts for the "File Forge" workflow here.
 const customForgePrompts = [
@@ -680,13 +784,14 @@ const customForgePrompts = [
         "name": "After Action Report",
         "text": "Generate an After Action Report (AAR) for a recent exercise, operation, or significant event. State the overall objectives. Provide a detailed summary of what occurred. Analyze what went well (sustains) and identify the root causes. Analyze what did not go well (improves) and identify the root causes. Provide specific, actionable recommendations for improvement, including responsible parties and proposed timelines for implementation."
     }
-];	
+];
 const customTemplatePrompts = [
     { 
         name: "Strict Analysis (Default)", 
         text: "Analyze the following document text. Your task is to identify all pieces of information that are variable and should be converted into placeholders. For each variable piece of information, you must: 1. Find the exact 'originalText' from the document. 2. Create a concise, descriptive, camelCase 'placeholderName' for it. Your final output must be ONLY a single, valid JSON array of objects, where each object contains an 'originalText' key and a 'placeholderName' key. Do not include any explanations, comments, or any text outside of the JSON array structure. Your entire response must be parsable as JSON." 
     }
 ];
+
 // --- STATE MANAGEMENT ---
 let forgeState = { fileBuffer: null, fileType: null, fileName: null, placeholders: [] };
 let creatorState = { fileBuffer: null, fileType: null, fileName: null, fullText: '' };
@@ -1184,6 +1289,3 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
-
-
-
