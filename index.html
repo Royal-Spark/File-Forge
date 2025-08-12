@@ -871,19 +871,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script>
-// --- CONFIGURATION ---
 
-// IMPORTANT: Replace this with the base URL of the raw files from your GitHub repo.
-// It should look like: https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/
-const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/Royal-Spark/File-Forge/main/';
+ // --- CONFIGURATION ---
+// Corrected base URL to use the full branch reference
+const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/Royal-Spark/File-Forge/refs/heads/main/';
 
 // Add your premade templates here
 const premadeTemplates = [
-    // Paths are relative to the base URL and do not need a leading slash.
-    { name: "Project One-Pager", path: "templates/Project_One_Pager_Template.docx" },
-    { name: "Decoration Narrative", path: "templates/Decoration_Narrative_Template.docx" },
-    { name: "Memorandum for Record", path: "templates/MFR_Template.docx" },
-    { name: "Letter of Counseling", path: "templates/LOC_Template.docx" },
+    // Corrected paths to include the "templates/" folder and use spaces in filenames
+    { name: "Project One-Pager", path: "templates/onepager.pptx" },
+    { name: "Decoration Narrative", path: "templates/MSM_Medal.docx" },
+    { name: "Memorandum for Record", path: "templates/MFR Template.docx" },
+    { name: "Letter of Counseling", path: "templates/LOCLORLOAe.docx" },
 ];
  
 // --- THEME SWITCHER LOGIC ---
@@ -1537,5 +1536,6 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
+
 
 
