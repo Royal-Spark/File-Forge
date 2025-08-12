@@ -59,6 +59,12 @@
   ::-webkit-scrollbar {
     width: 12px;
   }
+/* This new class ONLY adds the visual background effect */
+.backdrop-blur-effect {
+    background-color: rgba(26, 26, 26, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px); /* For Safari */
+}
   ::-webkit-scrollbar-track {
     background: transparent;
   }
@@ -673,7 +679,7 @@
 <body>
 
 <!-- Password Modal -->
-<div id="passwordModal" style="opacity: 0.5;" class="modal-overlay">
+<div id="passwordModal" class="modal-overlay backdrop-blur-effect">
     <div class="modal-content">
         <h3>Beta Access</h3>
         <p>This tool is in beta testing. Please enter the password to continue.</p>
@@ -1536,6 +1542,7 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
+
 
 
 
