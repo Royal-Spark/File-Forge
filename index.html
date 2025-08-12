@@ -12,7 +12,7 @@
  /* --- Visual Styles from Royal Spark Theme --- */
   :root {
     --bg-dark: #09090b;
-    --card-bg: rgba(39, 39, 42, 1);templates/LOCLORLOA.docx
+    --card-bg: rgba(39, 39, 42, .8);
     --border-color: rgba(161, 161, 170, 0.2);
     --text-primary: #e4e4e7; /* zinc-200 */
     --text-secondary: #a1a1aa; /* zinc-400 */
@@ -889,6 +889,7 @@ const premadeTemplates = [
     { name: "Decoration Narrative", path: "templates/MSM_medal.docx" },
     { name: "Memorandum for Record", path: "templates/MFR Template.docx" },
     { name: "Letter of Counseling", path: "templates/LOCLORLOA.docx" },
+    { name: "LOC Rebuttal", path: "templates/LOCRebuttal.docx" ),
 ];
  
 // --- THEME SWITCHER LOGIC ---
@@ -950,6 +951,10 @@ const customForgePrompts = [
     {
         "name": "USAF LOC/LOR/LOA",
         "text": "Generate the text for a formal Letter of Counseling, Admonishment, or Reprimand. Clearly state the specific infraction or unacceptable behavior and cite the relevant AFI, UCMJ article, or standard that was violated. Describe the negative impact of the action. Detail the required corrective actions the member must take and by what date. Include a statement that further deviation will result in more severe action.\n\nAnalyze the placeholders in the document and the user's provided information. If any details are missing to create a complete and accurate response, ask for clarification. When asking for more information, use clear, plain-language questions (e.g., ask 'What specific standard was violated?' instead of 'VIOLATED_STANDARD'). Once you have all necessary information, generate the content as a single JSON object within a code block, using the original placeholder names from the document as keys."
+    },
+    {
+        "name": "LOC Rebuttal",
+        "text": "Generate the text for a Letter of Counseling rebuttal. Use the format: “I am writing in response to the LOC issued ……. I understand my actions….. here is what happened…..”. Ensure you are following proper grammar, show professional remorse and state what corrective actions you will take to ensure this does not happen again. HOWEVER, if the user is arguing that they do not deserve the LOC, you will act as their lawyer and defend them. Ensure everything is in first person as required. You must analyze the tone of their data and check if they are admitting fault or not. If you are unsure you must ask for clarification. If any details are missing to create a complete and accurate response, ask for clarification. When asking for more information, use clear, plain-language questions (e.g., ask 'What specific standard was violated?' instead of 'VIOLATED_STANDARD'). Once you have all necessary information, generate the content as a single JSON object within a code block, using the original placeholder names from the document as keys."
     },
     {
         "name": "After Action Report",
@@ -1542,6 +1547,7 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
+
 
 
 
