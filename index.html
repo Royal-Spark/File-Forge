@@ -12,7 +12,7 @@
  /* --- Visual Styles from Royal Spark Theme --- */
   :root {
     --bg-dark: #09090b;
-    --card-bg: rgba(39, 39, 42, 0.5);
+    --card-bg: rgba(39, 39, 42, 1);
     --border-color: rgba(161, 161, 170, 0.2);
     --text-primary: #e4e4e7; /* zinc-200 */
     --text-secondary: #a1a1aa; /* zinc-400 */
@@ -54,6 +54,26 @@
     padding-top: 30px; /* Space for fixed banner */
     transition: background-color 0.3s, color 0.3s;
   }
+
+  /* --- Custom Scrollbar --- */
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, var(--primary-purple), var(--primary-cyan));
+    border-radius: 10px;
+    border: 3px solid var(--bg-dark);
+  }
+  html[data-theme='light'] ::-webkit-scrollbar-thumb {
+    border: 3px solid var(--bg-dark);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, var(--accent-purple-muted), #47e0f1);
+  }
+
 
   /* --- Fixed Warning Banner --- */
   .warning-banner {
@@ -199,6 +219,11 @@
     padding: 1.5rem;
     margin-bottom: 2rem;
     transition: all 0.3s ease;
+    position: relative; /* Establish stacking context */
+  }
+  /* This ensures the first card and its dropdown appear above subsequent cards */
+  #step1Card {
+    z-index: 10;
   }
   .card:hover {
     border-color: rgba(168, 85, 247, 0.5);
@@ -235,21 +260,97 @@
     margin-bottom: 1.5rem;
   }
 
-  /* --- File Input --- */
+  /* --- File Input & Template Dropdown --- */
+  .file-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
   input[type="file"] {
     display: block;
     padding: 1rem;
-    width: 100%;
     background: rgba(168, 85, 247, 0.05);
     border: 2px dashed var(--border-color);
     border-radius: 0.5rem;
     color: var(--text-primary);
     cursor: pointer;
     transition: all 0.3s ease;
+    flex: 1;
+    min-width: 0;
   }
   input[type="file"]:hover {
     background: rgba(168, 85, 247, 0.1);
     border-color: var(--primary-purple);
+  }
+  .template-dropdown-wrapper {
+    text-align: center;
+  }
+  .template-dropdown-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .custom-dropdown {
+    position: relative;
+  }
+  .dropdown-toggle {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 1rem;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+  .dropdown-toggle:hover {
+    border-color: var(--primary-purple);
+  }
+  .dropdown-toggle svg {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.2s ease;
+  }
+  .dropdown-toggle.open svg {
+    transform: rotate(180deg);
+  }
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    list-style: none;
+    padding: 0.5rem;
+    z-index: 50;
+    max-height: 200px;
+    overflow-y: auto;
+    backdrop-filter: blur(10px);
+  }
+  .dropdown-menu.show {
+    display: block;
+  }
+  .dropdown-menu li {
+    padding: 0.75rem 1rem;
+    color: var(--text-secondary);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .dropdown-menu li:hover {
+    background-color: var(--primary-purple);
+    color: white;
   }
 
   /* --- Buttons --- */
@@ -527,6 +628,45 @@
     .main-tab { padding: 0.75rem 2rem; }
     .btn-group { flex-direction: row; align-items: center; }
     .btn { width: auto; }
+    .file-input-container {
+        flex-direction: row;
+        align-items: center;
+    }
+    .template-dropdown-wrapper {
+        text-align: left;
+        flex-basis: 50%; /* Give it a base size */
+    }
+  }
+
+  /* Mobile-specific dropdown styling */
+  @media (max-width: 767px) {
+    .dropdown-menu.mobile-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        align-items: flex-end;
+        z-index: 1100;
+    }
+    .dropdown-menu.mobile-modal ul {
+        background: var(--bg-dark);
+        width: 100%;
+        padding: 1rem;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        max-height: 70vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+    }
   }
 </style>
 </head>
@@ -595,12 +735,28 @@
   <!-- Main Tab: File Forge -->
   <div id="forgeTab" class="main-tab-content active">
     <div id="step1Card" class="card">
-      <h2><span class="step-badge">1</span>Upload Document Template</h2>
-      <p>Select a Word (.docx), PowerPoint (.pptx), Excel (.xlsx), or fillable PDF (.pdf) template.</p>
-      <div class="file-input-wrapper">
+      <h2><span class="step-badge">1</span>Select Template</h2>
+      <p>Upload a Word (.docx), PowerPoint (.pptx), Excel (.xlsx), or fillable PDF (.pdf) template, or choose a pre-made one.</p>
+      
+      <div class="file-input-container">
         <input type="file" id="templateFile" accept=".docx,.pptx,.xlsx,.pdf" onchange="handleFileChange(event, 'forge')">
+        
+        <div class="template-dropdown-wrapper">
+          <label class="template-dropdown-label">Or use our premade templates</label>
+          <div class="custom-dropdown">
+            <button type="button" class="dropdown-toggle" id="templateDropdownBtn">
+              <span id="dropdownSelectedText">Select a template</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
+            </button>
+            <div class="dropdown-menu" id="templateDropdownMenuContainer">
+                <ul id="templateDropdownMenu">
+                    <!-- Options will be populated by JS -->
+                </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="fileInfo"></div>
+      <div id="fileInfo" style="margin-top: 1rem;"></div>
     </div>
 
     <div id="step2Card" class="card">
@@ -715,6 +871,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 <script>
+// --- CONFIGURATION ---
+// IMPORTANT: Replace this with the base URL of the raw files from your GitHub repo.
+// It should look like: https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/
+const GITHUB_RAW_BASE_URL = 'https://raw.githubusercontent.com/Pathfinder-Services/USAF-File-Forge/main/';
+
+// Add your premade templates here
+const premadeTemplates = [
+    { name: "Project One-Pager", path: "templates/Project_One_Pager_Template.docx" },
+    { name: "Decoration Narrative", path: "templates/Decoration_Narrative_Template.docx" },
+    { name: "Memorandum for Record", path: "templates/MFR_Template.docx" },
+    { name: "Letter of Counseling", path: "templates/LOC_Template.docx" },
+];
+
 // --- THEME SWITCHER LOGIC ---
 const themeToggleBtn = document.getElementById('theme-toggle');
 const sunIcon = document.getElementById('sun-icon');
@@ -732,20 +901,9 @@ function applyTheme(theme) {
     }
 }
 
-// Check for a saved theme in localStorage
 const savedTheme = localStorage.getItem('theme');
-// Check for the user's system preference
 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-// Determine the initial theme
-let initialTheme = 'dark'; // Default to dark
-if (savedTheme) {
-    initialTheme = savedTheme; // Use saved theme if it exists
-} else {
-    initialTheme = prefersDark ? 'dark' : 'light'; // Otherwise, use system preference
-}
-
-// Apply the determined theme on page load
+let initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
 applyTheme(initialTheme);
 
 themeToggleBtn.addEventListener('click', () => {
@@ -757,7 +915,6 @@ themeToggleBtn.addEventListener('click', () => {
 
 
 // --- CUSTOM PROMPT CONFIGURATION ---
-// Add or edit custom prompts for the "File Forge" workflow here.
 const customForgePrompts = [
     {
         "name": "Standard Content",
@@ -836,6 +993,7 @@ window.onload = function() {
   debug('Page loaded. Awaiting password.');
   setupModal();
   setupPasswordModal();
+  setupTemplateDropdown();
 }
 
 function populatePromptDropdowns() {
@@ -925,6 +1083,7 @@ function handleRestartClick() {
 function restartTool() {
     document.getElementById('templateFile').value = '';
     document.getElementById('creatorFile').value = '';
+    document.getElementById('dropdownSelectedText').textContent = 'Select a template';
     forgeState = { fileBuffer: null, fileType: null, fileName: null, placeholders: [] };
     creatorState = { fileBuffer: null, fileType: null, fileName: null, fullText: '' };
     resetForgeUI();
@@ -957,6 +1116,53 @@ function resetCreatorUI() {
     debug('Template Creator UI reset');
 }
 
+// --- TEMPLATE DROPDOWN LOGIC ---
+function setupTemplateDropdown() {
+    const dropdownBtn = document.getElementById('templateDropdownBtn');
+    const menuContainer = document.getElementById('templateDropdownMenuContainer');
+    const menu = document.getElementById('templateDropdownMenu');
+
+    // Populate dropdown
+    premadeTemplates.forEach(template => {
+        const li = document.createElement('li');
+        li.textContent = template.name;
+        li.dataset.path = template.path;
+        li.addEventListener('click', () => {
+            loadTemplateFromUrl(template);
+            document.getElementById('dropdownSelectedText').textContent = template.name;
+            closeDropdown();
+        });
+        menu.appendChild(li);
+    });
+
+    const closeDropdown = () => {
+        menuContainer.classList.remove('show');
+        dropdownBtn.classList.remove('open');
+        if (window.innerWidth < 768) {
+            menuContainer.classList.remove('mobile-modal');
+        }
+    };
+
+    dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isShown = menuContainer.classList.toggle('show');
+        dropdownBtn.classList.toggle('open', isShown);
+        if (window.innerWidth < 768 && isShown) {
+            menuContainer.classList.add('mobile-modal');
+        } else {
+            menuContainer.classList.remove('mobile-modal');
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdownBtn.contains(e.target) && !menu.contains(e.target)) {
+            closeDropdown();
+        }
+    });
+}
+
+
 // --- CORE LOGIC ---
 function handleFileChange(event, mode) {
   const file = event.target.files[0];
@@ -982,17 +1188,11 @@ function handleFileChange(event, mode) {
   const reader = new FileReader();
   reader.onload = async function(e) {
     const fileBuffer = e.target.result;
-    infoEl.innerHTML = `<div class="alert alert-success">✅ ${file.name} loaded</div>`;
     
     if (mode === 'forge') {
-        resetForgeUI();
-        infoEl.innerHTML = `<div class="alert alert-success">✅ ${file.name} loaded</div>`;
-        forgeState = { ...forgeState, fileBuffer, fileType, fileName: file.name };
-        document.getElementById('extractBtn').disabled = false;
-        debug(`Forge file loaded: ${file.name}`);
-        scrollToElement('step2Card');
-        setTimeout(() => extractPlaceholders(), 100);
+        processForgeFile(fileBuffer, fileType, file.name);
     } else if (mode === 'creator') {
+        infoEl.innerHTML = `<div class="alert alert-success">✅ ${file.name} loaded</div>`;
         resetCreatorUI();
         infoEl.innerHTML = `<div class="alert alert-success">✅ ${file.name} loaded</div>`;
         creatorState = { ...creatorState, fileBuffer, fileType, fileName: file.name };
@@ -1001,6 +1201,45 @@ function handleFileChange(event, mode) {
     }
   };
   reader.readAsArrayBuffer(file);
+}
+
+async function loadTemplateFromUrl(template) {
+    const infoEl = document.getElementById('fileInfo');
+    infoEl.innerHTML = `<div class="alert alert-success">⏳ Loading template: ${template.name}...</div>`;
+    const url = GITHUB_RAW_BASE_URL + template.path;
+
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+        
+        const fileBuffer = await response.arrayBuffer();
+        const fileName = template.path.split('/').pop();
+        const lowerName = fileName.toLowerCase();
+        const fileType = lowerName.endsWith('.docx') ? 'docx' :
+                         lowerName.endsWith('.pptx') ? 'pptx' :
+                         lowerName.endsWith('.xlsx') ? 'xlsx' : 
+                         lowerName.endsWith('.pdf')  ? 'pdf'  : null;
+
+        if (!fileType) throw new Error('Invalid template file type.');
+
+        processForgeFile(fileBuffer, fileType, fileName);
+
+    } catch (error) {
+        debug(`Error loading template from URL: ${error}`);
+        infoEl.innerHTML = `<div class="alert alert-error">❌ Failed to load template. ${error.message}</div>`;
+    }
+}
+
+function processForgeFile(fileBuffer, fileType, fileName) {
+    const infoEl = document.getElementById('fileInfo');
+    resetForgeUI();
+    infoEl.innerHTML = `<div class="alert alert-success">✅ ${fileName} loaded</div>`;
+    forgeState = { ...forgeState, fileBuffer, fileType, fileName: fileName };
+    document.getElementById('extractBtn').disabled = false;
+    document.getElementById('templateFile').value = ''; // Clear file input
+    debug(`Forge file processed: ${fileName}`);
+    scrollToElement('step2Card');
+    setTimeout(() => extractPlaceholders(), 100);
 }
 
 // --- FILE FORGE WORKFLOW ---
@@ -1296,6 +1535,3 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
-
-
-
