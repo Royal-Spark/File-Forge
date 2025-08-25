@@ -454,11 +454,7 @@
     transition: all 0.2s ease;
     resize: vertical;
   }
-  textarea:focus, input[type="text"]:focus, input[type="password"]:focus, select:focus {
-    outline: none;
-    border-color: var(--primary-purple);
-    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
-  }
+
   .input-group { margin-bottom: 1.5rem; }
   .input-label {
     display: block;
@@ -615,16 +611,7 @@
       width: auto;
       flex: 1;
   }
-  .password-error-msg {
-      color: var(--error);
-      font-size: 0.9rem;
-      margin-top: 1rem;
-      min-height: 1.2em;
-      display: none;
-  }
-  .password-error-msg.visible {
-      display: block;
-  }
+
 
   /* --- Responsive Styles --- */
   @media (min-width: 768px) {
@@ -677,17 +664,16 @@
 </style>
 </head>
 <body>
-
-<!-- Password Modal -->
-<div id="passwordModal" class="modal-overlay">
+ 
+<!-- Disclaimer Modal -->
+<div id="disclaimerModal" class="modal-overlay">
     <div class="modal-content">
-        <h3>Beta Access</h3>
-        <p>This tool is in beta testing. Please enter the password to continue.</p>
-        <div class="input-group">
-            <input type="password" id="passwordInput" placeholder="Enter password...">
+        <h3>Beta Testing Notice</h3>
+        <p>This tool is in beta testing; you could get odd or inaccurate results from the AI. Do not input CUI or PII into this, sanitize any names, dates, locations, etc.</p>
+        <div class="modal-buttons">
+            <button id="disclaimerBackBtn" class="btn btn-secondary">Take Me Back</button>
+            <button id="disclaimerConfirmBtn" class="btn btn-primary">I Understand</button>
         </div>
-        <button id="passwordSubmitBtn" class="btn btn-primary">Enter</button>
-        <div id="passwordError" class="password-error-msg"></div>
     </div>
 </div>
 
@@ -1003,9 +989,9 @@ function xmlEncode(text) {
 
 // --- INITIALIZATION & UI CONTROL ---
 window.onload = function() {
-  debug('Page loaded. Awaiting password.');
+  debug('Page loaded. Awaiting disclaimer confirmation.');
   setupModal();
-  setupPasswordModal();
+  setupDisclaimerModal();
   setupTemplateDropdown();
 }
 
@@ -1033,34 +1019,25 @@ function setupModal() {
     });
 }
 
-function setupPasswordModal() {
-    const modal = document.getElementById('passwordModal');
-    const passwordInput = document.getElementById('passwordInput');
-    const submitBtn = document.getElementById('passwordSubmitBtn');
+ function setupDisclaimerModal() {
+    const modal = document.getElementById('disclaimerModal');
+    const backBtn = document.getElementById('disclaimerBackBtn');
+    const confirmBtn = document.getElementById('disclaimerConfirmBtn');
     
     modal.classList.add('visible');
-    passwordInput.focus();
 
-    const checkPassword = () => {
-        const errorMsg = document.getElementById('passwordError');
-        if (passwordInput.value === 'theonetool') {
-            modal.classList.remove('visible');
-            document.querySelector('main').classList.add('unlocked');
-            populatePromptDropdowns();
-        } else {
-            errorMsg.textContent = 'Incorrect password. Please try again.';
-            errorMsg.classList.add('visible');
-            passwordInput.value = '';
-            passwordInput.focus();
-        }
+    const acceptDisclaimer = () => {
+        modal.classList.remove('visible');
+        document.querySelector('main').classList.add('unlocked');
+        populatePromptDropdowns();
     };
     
-    submitBtn.addEventListener('click', checkPassword);
-    passwordInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            checkPassword();
-        }
-    });
+    const goBack = () => {
+        window.location.href = 'https://royal-spark.github.io/Landing-Page/';
+    };
+    
+    confirmBtn.addEventListener('click', acceptDisclaimer);
+    backBtn.addEventListener('click', goBack);
 }
 
 function showConfirm(title, message, callback) {
@@ -1548,6 +1525,7 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
+
 
 
 
