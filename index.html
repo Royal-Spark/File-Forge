@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>USAF File Forge</title>
-<!-- Google Fonts for typography -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -358,7 +357,44 @@
     background-color: var(--primary-purple);
     color: white;
   }
-
+  
+  /* --- New Selection Option Styles --- */
+  .selection-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+  }
+  .selection-option {
+      flex: 1;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  }
+  .selection-option.active {
+      border-color: var(--primary-purple);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+      opacity: 1;
+  }
+  .selection-option:not(.active) {
+      opacity: 0.5;
+      background-color: rgba(39, 39, 42, 0.2);
+  }
+  .selection-option:not(.active):hover {
+      opacity: 0.7;
+  }
+  .selection-option:not(.active) h3 {
+      color: var(--text-secondary);
+  }
+  .selection-option h3 {
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+  }
+  
   /* --- Buttons --- */
   .btn {
     padding: 0.75rem 1.5rem;
@@ -629,6 +665,9 @@
         text-align: left;
         flex-basis: 50%; /* Give it a base size */
     }
+    .selection-container {
+        flex-direction: row;
+    }
   }
 
   /* Mobile-specific dropdown styling */
@@ -665,7 +704,6 @@
 </head>
 <body>
  
-<!-- Disclaimer Modal -->
 <div id="disclaimerModal" class="modal-overlay">
     <div class="modal-content">
         <h3>Beta Testing Notice</h3>
@@ -677,7 +715,6 @@
     </div>
 </div>
 
-<!-- Custom Confirm Modal -->
 <div id="customConfirmModal" class="modal-overlay">
     <div class="modal-content">
         <h3 id="modalTitle">Are you sure?</h3>
@@ -689,7 +726,6 @@
     </div>
 </div>
 
-<!-- Warning Banner -->
 <div class="warning-banner">
   THIS TOOL IS IN BETA TESTING - DO NOT INPUT CUI OR PII INTO THIS SYSTEM
 </div>
@@ -724,40 +760,40 @@
     </div>
   </div>
 
-  <!-- Main Tab: File Forge -->
   <div id="forgeTab" class="main-tab-content active">
     <div id="step1Card" class="card">
-      <h2><span class="step-badge">1</span>Select Template</h2>
-      <p>Upload a Word (.docx), PowerPoint (.pptx), Excel (.xlsx), or fillable PDF (.pdf) template, or choose a pre-made one.</p>
-      
-      <div class="file-input-container">
-        <input type="file" id="templateFile" accept=".docx,.pptx,.xlsx,.pdf" onchange="handleFileChange(event, 'forge')">
+        <h2><span class="step-badge">1</span>Upload Or Select Template</h2>
+        <p>Upload a Word (.docx), PowerPoint (.pptx), Excel (.xlsx), or PDF (.pdf) template in the correct format, or choose from our pre-made templates.</p>
         
-        <div class="template-dropdown-wrapper">
-          <label class="template-dropdown-label">Or use our premade templates</label>
-          <div class="custom-dropdown">
-            <button type="button" class="dropdown-toggle" id="templateDropdownBtn">
-              <span id="dropdownSelectedText">Select a template</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" /></svg>
-            </button>
-            <div class="dropdown-menu" id="templateDropdownMenuContainer">
-                <ul id="templateDropdownMenu">
-                    <!-- Options will be populated by JS -->
-                </ul>
+        <div class="selection-container">
+            <div id="uploadOption" class="selection-option active">
+                <h3>Upload a file</h3>
+                <input type="file" id="templateFile" accept=".docx,.pptx,.xlsx,.pdf" onchange="handleFileChange(event, 'forge')">
             </div>
-          </div>
+            <div id="selectOption" class="selection-option">
+                <h3>Select a template</h3>
+                <div class="template-dropdown-wrapper">
+                    <label class="template-dropdown-label">Use our premade templates</label>
+                    <div class="custom-dropdown">
+                        <button type="button" class="dropdown-toggle" id="templateDropdownBtn">
+                            <span id="dropdownSelectedText">Select a template</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div class="dropdown-menu" id="templateDropdownMenuContainer">
+                            <ul id="templateDropdownMenu">
+                                </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div id="fileInfo" style="margin-top: 1rem;"></div>
+        <div id="fileInfo" style="margin-top: 1rem;"></div>
     </div>
 
     <div id="step2Card" class="card">
-      <h2><span class="step-badge">2</span>Extract & Configure Placeholders</h2>
-      <p>Placeholders (or PDF form fields) are automatically extracted. You can also re-scan manually.</p>
-      <button onclick="extractPlaceholders()" id="extractBtn" class="btn btn-primary" disabled>
-        🔍 Extract Placeholders
-      </button>
-      <div id="placeholdersOutput"></div>
+        <h2><span class="step-badge">2</span>Provide Content</h2>
+        <p>Give the AI context by uploading a document or pasting text. Alternatively, switch to "Manual Entry" to fill placeholders yourself.</p>
+        <div id="placeholdersOutput"></div>
       
       <div id="tabsContainer" style="display: none; margin-top: 2rem;">
         <div class="sub-tabs">
@@ -771,8 +807,13 @@
             <select id="forgePromptSelector"></select>
           </div>
           <div class="input-group">
-            <label class="input-label">Provide the AI your data or context (Required)</label>
-            <textarea id="aiContext" rows="4" placeholder="Provide details relevant to the template..."></textarea>
+              <label class="input-label">Upload a document for context (Optional)</label>
+              <input type="file" id="contextFile" accept=".docx,.pptx,.xlsx,.pdf" onchange="handleContextFileChange(event)">
+              <div id="contextFileInfo" class="alert" style="display: none; margin-top: 1rem;"></div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Or paste your data/context here</label>
+            <textarea id="aiContext" rows="6" placeholder="Provide details relevant to the template..."></textarea>
           </div>
           <div class="btn-group">
               <button onclick="generateAIPrompt()" id="generateAndCopyBtn" class="btn btn-primary">🎯 Generate & Copy Prompt</button>
@@ -794,7 +835,6 @@
     </div>
   </div>
 
-  <!-- Main Tab: Template Creator -->
   <div id="creatorTab" class="main-tab-content">
       <div class="card">
           <h2><span class="step-badge">1</span>Upload Completed Document</h2>
@@ -829,28 +869,24 @@
       </div>
   </div>
 
-  <!-- Main Tab: Placeholder -->
   <div id="placeholderTab" class="main-tab-content">
       <div class="card">
           <h2><span class="step-badge">?</span>Future Tool</h2>
           <p>This section is reserved for a future tool. Check back later for updates!</p>
       </div>
   </div>
-  <!-- Main Tab: Placeholder 2 -->
-   <div id="placeholder2Tab" class="main-tab-content">
+  <div id="placeholder2Tab" class="main-tab-content">
       <div class="card">
           <h2><span class="step-badge">?</span>Future Tool 2</h2>
           <p>This section is reserved for a second future tool. Check back later for updates!</p>
       </div>
   </div>
 
-  <!-- Debug Panel -->
   <div class="debug-panel" id="debugPanel">
     <div>🐛 Debug Output:</div>
     <div id="debugOutput"></div>
   </div>
 
-  <!-- Restart Button -->
   <div class="restart-container">
     <button onclick="handleRestartClick()" class="btn btn-restart">
       🔄 Restart Tool
@@ -956,7 +992,7 @@ const customTemplatePrompts = [
 ];
 
 // --- STATE MANAGEMENT ---
-let forgeState = { fileBuffer: null, fileType: null, fileName: null, placeholders: [] };
+let forgeState = { fileBuffer: null, fileType: null, fileName: null, placeholders: [], contextTextFromFile: '' };
 let creatorState = { fileBuffer: null, fileType: null, fileName: null, fullText: '' };
 
 // --- UTILITY FUNCTIONS ---
@@ -993,6 +1029,7 @@ window.onload = function() {
   setupModal();
   setupDisclaimerModal();
   setupTemplateDropdown();
+  setupSelectionOptions();
 }
 
 function populatePromptDropdowns() {
@@ -1073,8 +1110,9 @@ function handleRestartClick() {
 function restartTool() {
     document.getElementById('templateFile').value = '';
     document.getElementById('creatorFile').value = '';
+    document.getElementById('contextFile').value = '';
     document.getElementById('dropdownSelectedText').textContent = 'Select a template';
-    forgeState = { fileBuffer: null, fileType: null, fileName: null, placeholders: [] };
+    forgeState = { fileBuffer: null, fileType: null, fileName: null, placeholders: [], contextTextFromFile: '' };
     creatorState = { fileBuffer: null, fileType: null, fileName: null, fullText: '' };
     resetForgeUI();
     resetCreatorUI();
@@ -1085,7 +1123,8 @@ function restartTool() {
 
 function resetForgeUI() {
     document.getElementById('fileInfo').innerHTML = '';
-    document.getElementById('extractBtn').disabled = true;
+    document.getElementById('contextFileInfo').style.display = 'none';
+    document.getElementById('contextFileInfo').innerHTML = '';
     document.getElementById('placeholdersOutput').innerHTML = '';
     document.getElementById('tabsContainer').style.display = 'none';
     document.getElementById('aiContext').value = '';
@@ -1106,6 +1145,50 @@ function resetCreatorUI() {
     debug('Template Creator UI reset');
 }
 
+// --- DYNAMIC SELECTION LOGIC ---
+function setupSelectionOptions() {
+    const uploadOption = document.getElementById('uploadOption');
+    const selectOption = document.getElementById('selectOption');
+    const templateFileInput = document.getElementById('templateFile');
+    const dropdownBtn = document.getElementById('templateDropdownBtn');
+
+    uploadOption.addEventListener('click', (e) => {
+        if (!uploadOption.classList.contains('active')) {
+            uploadOption.classList.add('active');
+            selectOption.classList.remove('active');
+            resetForgeStateAndUI();
+        }
+        if (e.target.tagName !== 'INPUT') {
+            templateFileInput.click();
+        }
+    });
+
+    selectOption.addEventListener('click', (e) => {
+        if (!selectOption.classList.contains('active')) {
+            selectOption.classList.add('active');
+            uploadOption.classList.remove('active');
+            resetForgeStateAndUI();
+        }
+    });
+
+    // Make dropdown button also trigger selection
+    dropdownBtn.addEventListener('click', () => {
+        if (!selectOption.classList.contains('active')) {
+            selectOption.classList.add('active');
+            uploadOption.classList.remove('active');
+            resetForgeStateAndUI();
+        }
+    });
+}
+
+function resetForgeStateAndUI() {
+    document.getElementById('dropdownSelectedText').textContent = 'Select a template';
+    document.getElementById('templateFile').value = '';
+    forgeState = { fileBuffer: null, fileType: null, fileName: null, placeholders: [] };
+    resetForgeUI();
+    debug('Selection changed, state reset.');
+}
+
 // --- TEMPLATE DROPDOWN LOGIC ---
 function setupTemplateDropdown() {
     const dropdownBtn = document.getElementById('templateDropdownBtn');
@@ -1118,6 +1201,9 @@ function setupTemplateDropdown() {
         li.textContent = template.name;
         li.dataset.path = template.path;
         li.addEventListener('click', () => {
+            if (!document.getElementById('selectOption').classList.contains('active')) {
+                document.getElementById('selectOption').click();
+            }
             loadTemplateFromUrl(template);
             document.getElementById('dropdownSelectedText').textContent = template.name;
             closeDropdown();
@@ -1174,6 +1260,12 @@ function handleFileChange(event, mode) {
       infoEl.innerHTML = '<div class="alert alert-error">❌ PDF files are not supported in Template Creator mode.</div>';
       return;
   }
+  
+  // Ensure the correct option is active
+  if (mode === 'forge' && !document.getElementById('uploadOption').classList.contains('active')) {
+      document.getElementById('uploadOption').click();
+  }
+
 
   const reader = new FileReader();
   reader.onload = async function(e) {
@@ -1187,10 +1279,51 @@ function handleFileChange(event, mode) {
         infoEl.innerHTML = `<div class="alert alert-success">✅ ${file.name} loaded</div>`;
         creatorState = { ...creatorState, fileBuffer, fileType, fileName: file.name };
         debug(`Creator file loaded: ${file.name}`);
-        setTimeout(() => extractAllText(), 100);
+        setTimeout(() => extractAllText(creatorState), 100);
     }
   };
   reader.readAsArrayBuffer(file);
+}
+
+async function handleContextFileChange(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const infoEl = document.getElementById('contextFileInfo');
+    infoEl.className = 'alert';
+    infoEl.innerHTML = `⏳ Extracting text from ${file.name}...`;
+    infoEl.style.display = 'block';
+
+    const lowerName = file.name.toLowerCase();
+    const fileType = lowerName.endsWith('.docx') ? 'docx' :
+                     lowerName.endsWith('.pptx') ? 'pptx' :
+                     lowerName.endsWith('.xlsx') ? 'xlsx' :
+                     lowerName.endsWith('.pdf') ? 'pdf' : null;
+    
+    if (!fileType) {
+        infoEl.innerHTML = `❌ Unsupported file type.`;
+        infoEl.classList.add('alert-error');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        const fileBuffer = e.target.result;
+        try {
+            const tempState = { fileBuffer, fileType, fileName: file.name };
+            const extractedText = await extractAllText(tempState, true);
+            document.getElementById('aiContext').value = extractedText;
+            forgeState.contextTextFromFile = extractedText;
+            infoEl.innerHTML = `✅ Successfully extracted text from ${file.name}.`;
+            infoEl.classList.add('alert-success');
+            debug(`Context text extracted from ${file.name}`);
+        } catch (error) {
+            infoEl.innerHTML = `❌ Error extracting text: ${error.message}`;
+            infoEl.classList.add('alert-error');
+            debug(`Context file error: ${error.message}`);
+        }
+    };
+    reader.readAsArrayBuffer(file);
 }
 
 async function loadTemplateFromUrl(template) {
@@ -1225,7 +1358,6 @@ function processForgeFile(fileBuffer, fileType, fileName) {
     resetForgeUI();
     infoEl.innerHTML = `<div class="alert alert-success">✅ ${fileName} loaded</div>`;
     forgeState = { ...forgeState, fileBuffer, fileType, fileName: fileName };
-    document.getElementById('extractBtn').disabled = false;
     document.getElementById('templateFile').value = ''; // Clear file input
     debug(`Forge file processed: ${fileName}`);
     scrollToElement('step2Card');
@@ -1238,9 +1370,7 @@ async function extractPlaceholders() {
   debug('Extracting placeholders for Forge...');
   
   const output = document.getElementById('placeholdersOutput');
-  const btn = document.getElementById('extractBtn');
-  btn.disabled = true;
-
+  
   try {
     const foundSet = new Set();
     if (forgeState.fileType === 'pdf') {
@@ -1264,8 +1394,8 @@ async function extractPlaceholders() {
     } else { // docx and pptx
         const zip = await JSZip.loadAsync(forgeState.fileBuffer);
         const filesToScan = forgeState.fileType === 'docx' 
-            ? ['word/document.xml'] 
-            : Object.keys(zip.files).filter(name => name.startsWith('ppt/slides/') && name.endsWith('.xml'));
+            ? ['word/document.xml', 'word/header1.xml', 'word/footer1.xml'] 
+            : Object.keys(zip.files).filter(name => (name.startsWith('ppt/slides/') || name.startsWith('ppt/notesSlides/')) && name.endsWith('.xml'));
         for (const fileName of filesToScan) {
             if (zip.files[fileName]) {
                 const content = await zip.file(fileName).async('string');
@@ -1290,8 +1420,6 @@ async function extractPlaceholders() {
   } catch (error) {
     debug('Placeholder extraction error: ' + error.message);
     output.innerHTML = `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
-  } finally {
-    btn.disabled = false;
   }
 }
 
@@ -1310,6 +1438,10 @@ async function generateAIPrompt() {
   const selectedPromptIndex = document.getElementById('forgePromptSelector').value;
   const customText = customForgePrompts[selectedPromptIndex].text;
   const context = document.getElementById('aiContext').value;
+  if (!context) {
+      alert("Please provide context in the text box or by uploading a file.");
+      return;
+  }
   const prompt = `You will conduct market research, align goals, and format appropriately where necessary, while outputting a valid JSON object ONLY. No additional text or markdown. ${customText}\n\n${context} You must ONLY return a valid JSON object, replacing the placeholders with the relevant text you have output. \n\nPlaceholders to fill:\n${forgeState.placeholders.map(p => `- ${p}`).join('\n')}\n\nReturn as JSON:\n{\n${forgeState.placeholders.map(p => `  "${p}": "your content here"`).join(',\n')}\n}`;
   const promptOutput = document.getElementById('aiPromptOutput');
   promptOutput.textContent = prompt;
@@ -1366,14 +1498,14 @@ async function fillTemplate(data) {
     } else { // docx and pptx
         const zip = await JSZip.loadAsync(forgeState.fileBuffer);
         const filesToScan = forgeState.fileType === 'docx' 
-            ? ['word/document.xml'] 
-            : Object.keys(zip.files).filter(name => name.startsWith('ppt/slides/') && name.endsWith('.xml'));
+            ? ['word/document.xml', 'word/header1.xml', 'word/footer1.xml']
+            : Object.keys(zip.files).filter(name => (name.startsWith('ppt/slides/') || name.startsWith('ppt/notesSlides/')) && name.endsWith('.xml'));
         for (const fileName of filesToScan) {
             if (zip.files[fileName]) {
                 let content = await zip.file(fileName).async('string');
                 for (const [key, value] of Object.entries(data)) {
                     const regex = new RegExp('\\{\\{\\s*' + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*\\}\\}', 'g');
-                    content = content.replace(regex, xmlEncode(value));
+                    content = content.replace(regex, xmlEncode(String(value)));
                 }
                 zip.file(fileName, content);
             }
@@ -1408,18 +1540,26 @@ async function fillTemplateFromManual() {
   await fillTemplate(data);
 }
 
-// --- TEMPLATE CREATOR WORKFLOW ---
-async function extractAllText() {
-    if (!creatorState.fileBuffer) return;
-    debug('Extracting all text for Creator...');
+// --- TEMPLATE CREATOR & CONTEXT EXTRACTION WORKFLOW ---
+async function extractAllText(state, returnOnly = false) {
+    if (!state.fileBuffer) return;
+    debug(`Extracting all text for ${returnOnly ? 'Context' : 'Creator'}...`);
     const textOutput = document.getElementById('creatorExtractedText');
     const btn = document.getElementById('generateTemplatePromptBtn');
-    btn.disabled = true;
-    textOutput.value = "Extracting...";
+    
+    if (!returnOnly) {
+      btn.disabled = true;
+      textOutput.value = "Extracting...";
+    }
+
     try {
         let fullText = '';
-        if (creatorState.fileType === 'xlsx') {
-            const workbook = XLSX.read(creatorState.fileBuffer, { type: 'buffer' });
+        if (state.fileType === 'pdf') {
+             // Basic PDF text extraction would require a heavier library like PDF.js
+             // For now, we'll inform the user. A more advanced implementation could be added.
+             throw new Error("Text extraction from PDF is not yet fully supported for context files.");
+        } else if (state.fileType === 'xlsx') {
+            const workbook = XLSX.read(state.fileBuffer, { type: 'buffer' });
             const texts = [];
             workbook.SheetNames.forEach(sheetName => {
                 const sheet = workbook.Sheets[sheetName];
@@ -1433,8 +1573,8 @@ async function extractAllText() {
             });
             fullText = texts.join('\n\n');
         } else {
-            const zip = await JSZip.loadAsync(creatorState.fileBuffer);
-            const filesToScan = creatorState.fileType === 'docx' ? ['word/document.xml'] : Object.keys(zip.files).filter(name => name.startsWith('ppt/slides/') && name.endsWith('.xml'));
+            const zip = await JSZip.loadAsync(state.fileBuffer);
+            const filesToScan = state.fileType === 'docx' ? ['word/document.xml'] : Object.keys(zip.files).filter(name => name.startsWith('ppt/slides/') && name.endsWith('.xml'));
             const texts = [];
             for (const fileName of filesToScan) {
                 if (zip.files[fileName]) {
@@ -1444,14 +1584,23 @@ async function extractAllText() {
             }
             fullText = texts.join('\n\n');
         }
-        creatorState.fullText = fullText;
-        textOutput.value = fullText;
-        btn.disabled = false;
-        document.getElementById('createTemplateBtn').disabled = false;
-        debug('Full text extraction complete.');
+
+        if (returnOnly) {
+            return fullText;
+        } else {
+            creatorState.fullText = fullText;
+            textOutput.value = fullText;
+            btn.disabled = false;
+            document.getElementById('createTemplateBtn').disabled = false;
+            debug('Full text extraction complete.');
+        }
+
     } catch (error) {
         debug('Full text extraction error: ' + error.message);
-        textOutput.value = `Error extracting text: ${error.message}`;
+        if (!returnOnly) {
+          textOutput.value = `Error extracting text: ${error.message}`;
+        }
+        throw error; // Re-throw for context handler
     }
 }
 async function generateTemplateAIPrompt() {
@@ -1525,15 +1674,3 @@ async function createTemplateFromAI() {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
