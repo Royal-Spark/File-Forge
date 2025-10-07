@@ -648,56 +648,66 @@
       flex: 1;
   }
 
+  /* --- Instructions Card Styles --- */
+  .instructions-card {
+      margin-bottom: 2rem;
+      padding: 0; 
+      border: 1px solid var(--border-color);
+  }
+  .instructions-toggle {
+      padding: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background-color 0.2s ease;
+  }
+  .instructions-toggle:hover {
+      background-color: rgba(168, 85, 247, 0.05);
+  }
+  .instructions-toggle h3 {
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      color: var(--text-primary);
+  }
+  .instructions-toggle .chevron-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: transform 0.3s ease;
+      color: var(--text-secondary);
+  }
+  .instructions-toggle.active .chevron-icon {
+      transform: rotate(180deg);
+  }
 
-  /* --- Responsive Styles --- */
-  @media (min-width: 768px) {
-    h1 { font-size: 2.25rem; }
-    .subtitle { font-size: 1.125rem; }
-    .card { padding: 2rem; }
-    .main-tab { padding: 0.75rem 2rem; }
-    .btn-group { flex-direction: row; align-items: center; }
-    .btn { width: auto; }
-    .file-input-container {
-        flex-direction: row;
-        align-items: center;
-    }
-    .template-dropdown-wrapper {
-        text-align: left;
-        flex-basis: 50%; /* Give it a base size */
-    }
+  /* FIXED BASE STYLES (Mobile First) */
+  .instructions-content {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 1.5rem;
+      transition: max-height 0.5s ease-in-out; /* Animate height ONLY */
+  }
+  .instructions-content.active {
+      max-height: 1500px;
+      padding-bottom: 1.5rem;
+  }
+
+  /* FIXED RESPONSIVE STYLES (Desktop) */
+   @media (min-width: 768px) {
+    /* ADD THIS RULE */
     .selection-container {
         flex-direction: row;
     }
-  }
 
-  /* Mobile-specific dropdown styling */
-  @media (max-width: 767px) {
-    .dropdown-menu.mobile-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.7);
-        backdrop-filter: blur(5px);
-        display: flex;
-        align-items: flex-end;
-        z-index: 1100;
+    .instructions-toggle {
+        padding: 2rem;
     }
-    .dropdown-menu.mobile-modal ul {
-        background: var(--bg-dark);
-        width: 100%;
-        padding: 1rem;
-        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-        border-top-left-radius: 1rem;
-        border-top-right-radius: 1rem;
-        max-height: 70vh;
-        overflow-y: auto;
-        animation: slideUp 0.3s ease-out;
+    .instructions-content {
+        padding: 0 3rem; /* Adjust horizontal padding for desktop */
     }
-    @keyframes slideUp {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
+    .instructions-content.active {
+        padding-bottom: 2rem; /* Adjust bottom padding for desktop */
     }
   }
 </style>
@@ -761,6 +771,58 @@
   </div>
 
   <div id="forgeTab" class="main-tab-content active">
+  
+  <div class="card instructions-card">
+    <div class="instructions-toggle" id="instructionsToggle">
+        <h3>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width: 1.25rem; height: 1.25rem; margin-right: 0.5rem; flex-shrink: 0;"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM9.25 9.25V5.5a.75.75 0 0 1 1.5 0v3.75h3.75a.75.75 0 0 1 0 1.5H10.75v3.75a.75.75 0 0 1-1.5 0V10.75H5.5a.75.75 0 0 1 0-1.5h3.75Z" clip-rule="evenodd" /></svg>
+            Instructions & Pro Tips
+        </h3>
+        <svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path></svg>
+    </div>
+    <div class="instructions-content" id="instructionsContent">
+        <h4>How It Works</h4>
+        <p>File Forge streamlines document creation by combining a <strong>template</strong> with your <strong>data</strong>. You provide a template with placeholders (e.g., `{{member_name}}`), give the AI context, and it generates the content needed to fill the template. You can also fill the fields manually.</p>
+        
+        <hr style="border-color: var(--border-color); margin: 1.5rem 0;">
+
+        <h4>Step-by-Step Guide (AI Generation)</h4>
+        <ol>
+            <li><strong>Choose Template:</strong> Upload your own `.docx`, `.pptx`, etc. file with placeholders, or select one from our pre-made list.</li>
+            <li><strong>Provide Context:</strong> In Step 2, upload a document (like a draft or bullet points) or paste text into the "Or paste your data" box. This is the information the AI will use.</li>
+            <li><strong>Select AI Instructions:</strong> Choose a prompt style that matches your goal (e.g., "USAF Decoration Narrative").</li>
+            <li><strong>Generate & Copy Prompt:</strong> Click the "Generate & Copy" button. This creates a detailed set of instructions for the AI and copies it to your clipboard.</li>
+            <li><strong>Use External AI:</strong> Go to an AI chat tool (like NIPR GPT), paste the prompt, and get the response.</li>
+            <li><strong>Paste JSON Response:</strong> The AI will return a block of code called JSON. Copy the entire JSON object (from `{` to `}`) and paste it into the "Paste AI Response (JSON)" box in File Forge. 
+			<li><strong>IMPORTANT:</strong>Do not use the "copy" button at the bottom of the response. Use only the copy button in the top right of the code block, or manually copy from { to }.</li>
+            <li><strong>Fill & Download:</strong> Click "Fill Template & Download" to get your completed document.</li>
+        </ol>
+
+        <hr style="border-color: var(--border-color); margin: 1.5rem 0;">
+
+        <h4>✨ Pro Tips & Advanced Usage</h4>
+        <ul>
+            <li><strong>Context is King:</strong> The better your input context, the better the AI's output. Provide clear, detailed bullet points or a rough draft for best results.</li>
+            <li><strong>Manual Override:</strong> Don't like a piece of AI-generated text? You can edit the JSON in the text box before you click "Fill Template".</li>
+            <li><strong>JSON Errors?:</strong> If the AI adds extra text like "Here is the JSON you requested:", make sure you only copy the text starting with `{` and ending with `}`.</li>
+            <li style="margin-top: 1rem;">
+                <strong>Advanced Control with Inline Instructions:</strong>
+                <p style="margin-top: 0.5rem; margin-bottom: 0.5rem;">For ultimate control, embed instructions directly inside your placeholders. The tool will pass these instructions to the AI. The tool still uses the name before the colon (`:`) as the placeholder key.</p>
+                <p><strong>Syntax:</strong> <code>{{placeholderName:Your detailed instruction here}}</code></p>
+                <pre style="margin-top: 0.5rem; font-size: 0.8rem;">
+// For character limits:
+{{projectSummary:Write a 2-3 sentence summary, under 280 characters}}
+
+// For specific formatting:
+{{actionItems:Provide as a bulleted list starting with a dash (-)}}
+
+// For controlling content and tone:
+{{rebuttalStatement:Write in a formal and respectful tone, acknowledging the counseling but not admitting fault.}}</pre>
+            </li>
+        </ul>
+    </div>
+</div>
+
     <div id="step1Card" class="card">
         <h2><span class="step-badge">1</span>Upload Or Select Template</h2>
         <p>Upload a Word (.docx), PowerPoint (.pptx), Excel (.xlsx), or PDF (.pdf) template in the correct format, or choose from our pre-made templates.</p>
@@ -1149,35 +1211,28 @@ function resetCreatorUI() {
 function setupSelectionOptions() {
     const uploadOption = document.getElementById('uploadOption');
     const selectOption = document.getElementById('selectOption');
-    const templateFileInput = document.getElementById('templateFile');
     const dropdownBtn = document.getElementById('templateDropdownBtn');
 
-    uploadOption.addEventListener('click', (e) => {
-        if (!uploadOption.classList.contains('active')) {
-            uploadOption.classList.add('active');
-            selectOption.classList.remove('active');
-            resetForgeStateAndUI();
-        }
-        if (e.target.tagName !== 'INPUT') {
-            templateFileInput.click();
-        }
-    });
+    // This helper function cleanly handles activating an option
+    const activateOption = (optionToActivate) => {
+        // Do nothing if it's already active
+        if (optionToActivate.classList.contains('active')) return;
 
-    selectOption.addEventListener('click', (e) => {
-        if (!selectOption.classList.contains('active')) {
-            selectOption.classList.add('active');
-            uploadOption.classList.remove('active');
-            resetForgeStateAndUI();
-        }
-    });
+        // Remove 'active' from both, then add it to the correct one
+        [uploadOption, selectOption].forEach(opt => opt.classList.remove('active'));
+        optionToActivate.classList.add('active');
+        
+        // Reset the UI state since the selection changed
+        resetForgeStateAndUI();
+    };
 
-    // Make dropdown button also trigger selection
+    // Add listeners to the three things that can change the selection
+    uploadOption.addEventListener('click', () => activateOption(uploadOption));
+    selectOption.addEventListener('click', () => activateOption(selectOption));
+    
+    // Clicking the dropdown button should activate the "select" option
     dropdownBtn.addEventListener('click', () => {
-        if (!selectOption.classList.contains('active')) {
-            selectOption.classList.add('active');
-            uploadOption.classList.remove('active');
-            resetForgeStateAndUI();
-        }
+        activateOption(selectOption);
     });
 }
 
@@ -1671,6 +1726,18 @@ async function createTemplateFromAI() {
         alert('Error creating template: ' + error.message);
     }
 }
+
+		document.addEventListener('DOMContentLoaded', () => {
+				const instructionsToggle = document.getElementById('instructionsToggle');
+				const instructionsContent = document.getElementById('instructionsContent');
+
+				if (instructionsToggle && instructionsContent) {
+					instructionsToggle.addEventListener('click', () => {
+						instructionsToggle.classList.toggle('active');
+						instructionsContent.classList.toggle('active');
+					});
+				}
+			});
 </script>
 </body>
 </html>
